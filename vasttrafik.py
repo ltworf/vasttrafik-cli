@@ -1,10 +1,28 @@
 import urllib2
 import json
+import datetime
+import re
+
+def to_datetime(date,time):
+    '''Converts two string date and time into a datetime object
+    
+    date format YYYY-MM-DD
+    time format HH:MM
+    '''
+    r= re.match(r'^([0-9]{1,4})-([0-9]{1,2})-([0-9]{1,2})$',date)
+    year = int(r.group(1))
+    month = int(r.group(2))
+    day = int(r.group(3))
+    r= re.match(r'^([0-9]{1,2}):([0-9]{1,2})$',time)
+    hour = int(r.group(1))
+    minute = int(r.group(2))
+    return datetime.datetime(year,month,day,hour,minute)
 
 class Vasttrafik:
     def __init__(self,key,api="api.vasttrafik.se/bin/rest.exe/v1"):
         self.key = key
         self.api = api
+        self.datetime_obj = None
         
     def request(self,service,param):
         url = "http://%s/%s?format=json&jsonpCallback=processJSON&authKey=%s&%s" % (self.api,service,self.key,param)
@@ -45,8 +63,89 @@ class Vasttrafik:
         c=b["LocationList"]['StopLocation']
         
         return [Stop(i) for i in c]
+    
+    def board(self,id,direction=None,arrival=False,time_span=None,departures=2):
+        '''Returns an arrival/departure board for a given station'''
         
+        
+        if arrival:
+            service='arrivalBoard'
+        else:
+            service='departureBoard'
+        
+        params='id=%s&' % id
+        
+        if direction != None:
+            params+='direction=%s&' % direction
+        #TODO arival, timespan and departures
+        b = json.loads(self.request(service,params)[13:-2])
+        print b
+        if arrival:
+            c=b['ArrivalBoard']['Arrival']
+        else:
+            c=b['DepartureBoard']['Departure']
+        
+        self.datetime_obj = to_datetime(b['DepartureBoard']['serverdate'],b['DepartureBoard']['servertime'])
+        return [BoardItem(i) for i in c]
+            
+class BoardItem(object):
+    '''This represents one item of the panel at a stop'''
+    def __init__(self,d):
+        self.name = d['name']
+        self.veichle_type = d['type']
+        self.stop = d['stop']
+        self.stopid = d['stopid']
+        self.journeyid = d['journeyid']
+        self.date = d['date']
+        self.time = d['time']
+        
+        #TODO self.journeydetail = d['journeyDetailRef']
+        
+        #optionals
+        self.track = None
+        self.rtdate = None
+        self.rttime = None
+        self.direction = None
+        self.stroke = None
+        self.bgcolor = None
+        self.fgcolor = None
+        self.night = False
+        self.booking = False
+        
+        if 'track' in d:
+            self.track = d['track']
+        if 'rtDate' in d:
+            self.rtdate = d['rtDate']
+        if 'rtTime' in d:
+            self.rttime = d['rtTime']
+        if 'rtTrack' in d:
+            self.track = d['rtTrack']
+        #TODO booking night    
+        if 'direction' in d:
+            self.direction = d['direction']
+        self.wheelchair = 'accessibility' in d and d['accessibility'] == 'wheelChair'
 
+        if 'bgColor' in d:
+            self.bgcolor = d['bgColor']
+        if 'stroke' in d:
+            self.stroke = d['stroke']
+        if 'fgColor' in d:
+            self.fgcolor = d['fgColor']
+        
+        
+        #Set the internal useful date representation
+        if self.rtdate != None:
+            date = self.rtdate
+        else:
+            date = self.date
+        if self.rttime != None:
+            time = self.rttime
+        else:
+            time = self.time
+            
+        self.datetime_obj = to_datetime(date,time)
+        print self.datetime_obj
+    
 class Stop(object):
     '''The object represents a stop
     
