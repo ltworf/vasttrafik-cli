@@ -151,39 +151,25 @@ class BoardItem(object):
     def toTerm(self,servertime):
         delta = (self.datetime_obj - servertime)
         delta = delta.seconds / 60
+        
+        
         try:
-            from colorama import init
-            from colorama import Fore, Back, Style
+           from ColorMap import XTermColorMap, VT100ColorMap
+           cmap = XTermColorMap()
         except:
             return self.toTxt(servertime)
-        init()
         
-        '''
-        Fore: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
-        Back: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
-        Style: DIM, NORMAL, BRIGHT, RESET_ALL
-        '''
         
-        #For some reason actually they have to be swapped...
-        bg = {'#dcd135':Fore.YELLOW,'#00abe5':Fore.BLUE,'#ffffff':Fore.WHITE,'#0e629b':Back.BLUE}
-        fg = {'#692869':Back.MAGENTA,'#5f5f5f':Back.BLACK,'#f58123':Back.YELLOW,'#14823c':Back.GREEN,'#eb1923':Back.RED,'#cd1432':Back.RED,'#008228':Back.GREEN,'#336699':Back.BLUE,'#872387':Back.RED,'#004b85':Back.BLUE,'#7d4313':Back.RED,'#b4e16e':Back.GREEN,'#fee6c2':Back.WHITE,'#ffffff':Back.WHITE,'#000000':Back.BLACK,'#102d64':Back.BLACK,'#00A5DC':Back.BLUE,'#fff014':Back.YELLOW,'#6ec8dc':Back.CYAN,'#fa8719':Back.MAGENTA}
         
-        bus = ''
+        #"\e[38;2;<r>;<g>;<b>m" | Forground Color  |
+        #| "\e[48;2;<r>;<g>;<b>m
         
-        if self.bgcolor in bg and self.fgcolor in fg:
-            bus+=bg[self.bgcolor]
-            bus+=fg[self.fgcolor]
-        else:
-            print "bg: ",self.bgcolor
-            print "fg: ", self.fgcolor
+        bgcolor = int('0x' + self.fgcolor[1:],16)
+        fgcolor = int('0x' + self.bgcolor[1:],16)
         
-        bus+=self.name
-        bus+=Style.RESET_ALL
+        bus = cmap.colorize(self.name,fgcolor,bg=bgcolor)
         
         return '%s -> %s (%s) -> %d' % (bus, self.direction ,self.track,delta)
-        
-        
-        
         
     def __init__(self,d):
         self._repr = d
