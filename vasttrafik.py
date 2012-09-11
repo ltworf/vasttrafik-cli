@@ -133,7 +133,9 @@ class BoardItem(object):
         delta = (self.datetime_obj - servertime)
         delta = delta.seconds / 60
         
-        bus = '<td  style="background-color:%s; color:%s;" >%s</td>' % (self.fgcolor,self.bgcolor,self.name)
+        name = self.getName()
+        
+        bus = '<td  style="background-color:%s; color:%s;" >%s</td>' % (self.fgcolor,self.bgcolor,name)
         direction = '<td>%s</td>' % self.direction
         track = '<td>%s</td>' % self.track
         delta = '<td>%d</td>' % delta
@@ -146,7 +148,7 @@ class BoardItem(object):
 
         bus = self.getName(color)
         
-        return '%s -> %s -> %d' % (bus, self.direction ,delta)
+        return '%s %0*d -> %s' % (bus, 2, delta, self.direction)
     def getName(self,color=False):
         '''Retuns a nice version of the name'''
         name = self.name

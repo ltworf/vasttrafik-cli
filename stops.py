@@ -44,6 +44,6 @@ while True:
         for i in trams:
             
             if prev_track != i.track:
-                print "Track %s" % i.track
+                print "   == Track %s ==" % i.track
             prev_track = i.track
             print i.toTerm(vast.datetime_obj)
