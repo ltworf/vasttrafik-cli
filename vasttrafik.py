@@ -19,6 +19,7 @@
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
 import urllib2
+import urllib
 import json
 import datetime
 import re
@@ -59,6 +60,7 @@ class Vasttrafik:
         
     def request(self,service,param):
         url = "http://%s/%s?format=json&jsonpCallback=processJSON&authKey=%s&%s" % (self.api,service,self.key,param)
+        
         f = urllib2.urlopen(url,timeout=10)
     
         r= ""
@@ -73,7 +75,7 @@ class Vasttrafik:
         
     def location(self,user_input):
         '''Returns a list of Stop objects, completing from the user input'''
-        a = self.request("location.name","input=%s" % user_input)
+        a = self.request("location.name",urllib.urlencode({'input':user_input}))
         b = json.loads(a[13:-2]) #They return me some crap around the json
         c=b["LocationList"]['StopLocation']
         
@@ -168,13 +170,11 @@ class BoardItem(object):
         
         bus = ''
         
-        if self.bgcolor in bg:
+        if self.bgcolor in bg and self.fgcolor in fg:
             bus+=bg[self.bgcolor]
-        else:
-            print "bg: ",self.bgcolor
-        if self.fgcolor in fg:
             bus+=fg[self.fgcolor]
         else:
+            print "bg: ",self.bgcolor
             print "fg: ", self.fgcolor
         
         bus+=self.name
