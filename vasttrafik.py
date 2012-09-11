@@ -210,7 +210,9 @@ class BoardItem(object):
             self.rttime = d['rtTime']
         if 'rtTrack' in d:
             self.track = d['rtTrack']
-        #TODO booking night    
+        if 'night' in d:
+            self.night = True
+        #TODO booking    
         if 'direction' in d:
             self.direction = d['direction']
         self.wheelchair = 'accessibility' in d and d['accessibility'] == 'wheelChair'
