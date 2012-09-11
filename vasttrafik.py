@@ -79,7 +79,6 @@ class Vasttrafik:
             params+='direction=%s&' % direction
         #TODO arival, timespan and departures
         b = json.loads(self.request(service,params)[13:-2])
-        print b
         if arrival:
             c=b['ArrivalBoard']['Arrival']
         else:
@@ -98,7 +97,50 @@ class BoardItem(object):
         Prints a string representation of the table item,
         
         servertime is a datetime object obtained from the Vasttrafik class '''
-        return servertime - self.datetime_obj
+        
+        delta = (self.datetime_obj - servertime)
+        delta = delta.seconds / 60
+        
+        return '%s -> %s (%s) -> %d' % (self.name,self.direction, self.track,delta)
+    def toTerm(self,servertime):
+        delta = (self.datetime_obj - servertime)
+        delta = delta.seconds / 60
+        try:
+            from colorama import init
+            from colorama import Fore, Back, Style
+        except:
+            return self.toTxt(servertime)
+        init()
+        
+        '''
+        Fore: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
+        Back: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, RESET.
+        Style: DIM, NORMAL, BRIGHT, RESET_ALL
+        '''
+        
+        #For some reason actually they have to be swapped...
+        bg = {'#dcd135':Fore.YELLOW,'#00abe5':Fore.BLUE,'#ffffff':Fore.WHITE,'#0e629b':Back.BLUE}
+        fg = {'#14823c':Back.GREEN,'#eb1923':Back.RED,'#cd1432':Back.RED,'#008228':Back.GREEN,'#336699':Back.BLUE,'#872387':Back.RED,'#004b85':Back.BLUE,'#7d4313':Back.RED,'#b4e16e':Back.GREEN,'#fee6c2':Back.WHITE,'#ffffff':Back.WHITE,'#000000':Back.BLACK,'#102d64':Back.BLACK,'#00A5DC':Back.BLUE,'#fff014':Back.YELLOW,'#6ec8dc':Back.CYAN,'#fa8719':Back.MAGENTA}
+        
+        bus = ''
+        
+        if self.bgcolor in bg:
+            bus+=bg[self.bgcolor]
+        else:
+            print "bg: ",self.bgcolor
+        if self.fgcolor in fg:
+            bus+=fg[self.fgcolor]
+        else:
+            print "fg: ", self.fgcolor
+        
+        bus+=self.name
+        bus+=Style.RESET_ALL
+        
+        return '%s -> %s (%s) -> %d' % (bus, self.direction ,self.track,delta)
+        
+        
+        
+        
     def __init__(self,d):
         self._repr = d
         self.name = d['name']
@@ -154,7 +196,6 @@ class BoardItem(object):
             time = self.time
             
         self.datetime_obj = to_datetime(date,time)
-        print self.datetime_obj
     
 class Stop(object):
     '''The object represents a stop
