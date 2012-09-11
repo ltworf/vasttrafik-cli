@@ -32,15 +32,14 @@ while True:
             if i>8:
                 break
     else:
-        trams= vast.board(stops[int(line)].id)
-        trams.sort(key=lambda x: x.track)
+        trams = vast.board(stops[int(line)].id)
         prev_track=None
         
         f= open('/tmp/t.html','w')
         f.write(vasttrafik.gen_timetable_html(trams,vast.datetime_obj))
         f.close()
         print "\n\n\n\n\n\n\n\n\n"
-        print "\t\t\t%s, Time: %s" % (stops[int(line)].name,vast.datetime_obj)
+        print "\t\t%s, Time: %s\n" % (stops[int(line)].name,vast.datetime_obj)
         for i in trams:
             
             if prev_track != i.track:

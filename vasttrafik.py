@@ -120,7 +120,9 @@ class Vasttrafik:
             c=b['DepartureBoard']['Departure']
         
         self.datetime_obj = to_datetime(b['DepartureBoard']['serverdate'],b['DepartureBoard']['servertime'])
-        return [BoardItem(i) for i in c]
+        trams = [BoardItem(i) for i in c]
+        trams.sort(key=lambda x: x.track)
+        return trams
             
 class BoardItem(object):
     '''This represents one item of the panel at a stop
