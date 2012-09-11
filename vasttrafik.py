@@ -89,8 +89,18 @@ class Vasttrafik:
         return [BoardItem(i) for i in c]
             
 class BoardItem(object):
-    '''This represents one item of the panel at a stop'''
+    '''This represents one item of the panel at a stop
+    has a bunch of attributes to represent the stop'''
+    def __repr__(self):
+        repr(self._repr)
+    def toTxt(self,servertime):
+        '''
+        Prints a string representation of the table item,
+        
+        servertime is a datetime object obtained from the Vasttrafik class '''
+        return servertime - self.datetime_obj
     def __init__(self,d):
+        self._repr = d
         self.name = d['name']
         self.veichle_type = d['type']
         self.stop = d['stop']
