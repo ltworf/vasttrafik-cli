@@ -27,20 +27,42 @@ class Vasttrafik:
         c=b["LocationList"]['StopLocation']
         
         return [Stop(i) for i in c]
+    def nearby(self,lat,lon,stops=10,dist=None):
+        '''
+        Returns the list of stops close to a certain location
+        
+        lat = latitude
+        lon = longitude
+        
+        stops = maximum number of stops to return
+        dist = maximum distance in meters
+        '''
+        params = 'originCoordLat=%s&originCoordLong=%s&maxNo=%d' % (str(lat),str(lon),stops)
+        if dist != None:
+            params += '&maxDist=%d' % dist
+            
+        b = json.loads(self.request('location.nearbystops',params)[13:-2])
+        c=b["LocationList"]['StopLocation']
+        
+        return [Stop(i) for i in c]
+        
 
 class Stop(object):
     '''The object represents a stop
     
     it has attributes:
     id
-    idx
+    idx //might be None
     lon
     lat
     name
     '''
     def __init__(self,d):
         self.id = d['id']
-        self.idx = d['idx']
+        if 'idx' in d: 
+            self.idx = d['idx'] 
+        else: 
+            self.idx = None
         self.lat = d['lat']
         self.lon = d['lon']
         self.name = d['name']
