@@ -108,11 +108,14 @@ class Vasttrafik:
         else:
             service='departureBoard'
         
-        params='id=%s&' % id
+        params='id=%s&maxDeparturesPerLine=2&' % id
         
         if direction != None:
             params+='direction=%s&' % direction
-        #TODO arival, timespan and departures
+        #TODO arival and departures
+        if time_span != None and time_span <=1439:
+            params+='timeSpan=%d&' % time_span
+        
         b = json.loads(self.request(service,params)[13:-2])
         if arrival:
             c=b['ArrivalBoard']['Arrival']

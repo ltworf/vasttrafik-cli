@@ -32,7 +32,7 @@ while True:
             if i>8:
                 break
     else:
-        trams = vast.board(stops[int(line)].id)
+        trams = vast.board(stops[int(line)].id,time_span=120)
         prev_track=None
         
         f= open('/tmp/t.html','w')
