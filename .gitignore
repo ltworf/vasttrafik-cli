@@ -1,4 +1,5 @@
 *~
+*.pyc
 auth.txt
 test.py
 
