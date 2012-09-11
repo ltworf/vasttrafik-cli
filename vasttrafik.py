@@ -23,6 +23,19 @@ import json
 import datetime
 import re
 
+def gen_timetable_html(stops,datetime_obj):
+    '''generates the HTML to a timetable
+    takes the tram list (resulting from a call to board)
+    and the time from the server'''
+    
+    r='<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body style="background-color:black; color:white;"><table>'
+    r+='<tr><td></td><td>To</td><td>Track</td><td>Next</td></tr>'
+    for i in stops:
+        r+= i.toHtml(datetime_obj).encode('utf-8')
+    r+='</table></body></html>'
+    return r    
+
+
 def to_datetime(date,time):
     '''Converts two string date and time into a datetime object
     
@@ -122,6 +135,17 @@ class BoardItem(object):
         delta = delta.seconds / 60
         
         return '%s -> %s (%s) -> %d' % (self.name,self.direction, self.track,delta)
+    def toHtml(self,servertime):
+        delta = (self.datetime_obj - servertime)
+        delta = delta.seconds / 60
+        
+        bus = '<td  style="background-color:%s; color:%s;" >%s</td>' % (self.fgcolor,self.bgcolor,self.name)
+        direction = '<td>%s</td>' % self.direction
+        track = '<td>%s</td>' % self.track
+        delta = '<td>%d</td>' % delta
+        
+        return '<tr>%s%s%s%s</tr>' %(bus,direction,track,delta)
+        
     def toTerm(self,servertime):
         delta = (self.datetime_obj - servertime)
         delta = delta.seconds / 60
@@ -140,7 +164,7 @@ class BoardItem(object):
         
         #For some reason actually they have to be swapped...
         bg = {'#dcd135':Fore.YELLOW,'#00abe5':Fore.BLUE,'#ffffff':Fore.WHITE,'#0e629b':Back.BLUE}
-        fg = {'#14823c':Back.GREEN,'#eb1923':Back.RED,'#cd1432':Back.RED,'#008228':Back.GREEN,'#336699':Back.BLUE,'#872387':Back.RED,'#004b85':Back.BLUE,'#7d4313':Back.RED,'#b4e16e':Back.GREEN,'#fee6c2':Back.WHITE,'#ffffff':Back.WHITE,'#000000':Back.BLACK,'#102d64':Back.BLACK,'#00A5DC':Back.BLUE,'#fff014':Back.YELLOW,'#6ec8dc':Back.CYAN,'#fa8719':Back.MAGENTA}
+        fg = {'#692869':Back.MAGENTA,'#5f5f5f':Back.BLACK,'#f58123':Back.YELLOW,'#14823c':Back.GREEN,'#eb1923':Back.RED,'#cd1432':Back.RED,'#008228':Back.GREEN,'#336699':Back.BLUE,'#872387':Back.RED,'#004b85':Back.BLUE,'#7d4313':Back.RED,'#b4e16e':Back.GREEN,'#fee6c2':Back.WHITE,'#ffffff':Back.WHITE,'#000000':Back.BLACK,'#102d64':Back.BLACK,'#00A5DC':Back.BLUE,'#fff014':Back.YELLOW,'#6ec8dc':Back.CYAN,'#fa8719':Back.MAGENTA}
         
         bus = ''
         
