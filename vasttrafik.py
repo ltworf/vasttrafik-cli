@@ -128,15 +128,7 @@ class BoardItem(object):
     def __repr__(self):
         repr(self._repr)
     def toTxt(self,servertime):
-        '''
-        Prints a string representation of the table item,
-        
-        servertime is a datetime object obtained from the Vasttrafik class '''
-        
-        delta = (self.datetime_obj - servertime)
-        delta = delta.seconds / 60
-        
-        return '%s -> %s (%s) -> %d' % (self.name,self.direction, self.track,delta)
+        return self.toTerm(servertime,color=false)
     def toHtml(self,servertime):
         delta = (self.datetime_obj - servertime)
         delta = delta.seconds / 60
@@ -148,28 +140,40 @@ class BoardItem(object):
         
         return '<tr>%s%s%s%s</tr>' %(bus,direction,track,delta)
         
-    def toTerm(self,servertime):
+    def toTerm(self,servertime,color=True):
         delta = (self.datetime_obj - servertime)
         delta = delta.seconds / 60
+
+        bus = self.getName(color)
         
+        return '%s -> %s -> %d' % (bus, self.direction ,delta)
+    def getName(self,color=False):
+        '''Retuns a nice version of the name'''
+        name = self.name
+        name = name.replace(u'Spårvagn','')
+        name = name.replace(u'Buss','')
+        name += " "
         
+        if self.wheelchair:
+            name += u"♿ "
+        if self.night:
+            name += u"☾ "
+        
+        while len(name)<20:
+            name=" "+name
+        
+        if not color:
+            return name
+    
         try:
            from ColorMap import XTermColorMap, VT100ColorMap
            cmap = XTermColorMap()
         except:
-            return self.toTxt(servertime)
-        
-        
-        
-        #"\e[38;2;<r>;<g>;<b>m" | Forground Color  |
-        #| "\e[48;2;<r>;<g>;<b>m
+           return name
         
         bgcolor = int('0x' + self.fgcolor[1:],16)
         fgcolor = int('0x' + self.bgcolor[1:],16)
-        
-        bus = cmap.colorize(self.name,fgcolor,bg=bgcolor)
-        
-        return '%s -> %s (%s) -> %d' % (bus, self.direction ,self.track,delta)
+        return cmap.colorize(name,fgcolor,bg=bgcolor)
         
     def __init__(self,d):
         self._repr = d

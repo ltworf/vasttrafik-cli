@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import vasttrafik
 import readline
 import sys
@@ -31,10 +33,17 @@ while True:
                 break
     else:
         trams= vast.board(stops[int(line)].id)
+        trams.sort(key=lambda x: x.track)
+        prev_track=None
+        
         f= open('/tmp/t.html','w')
         f.write(vasttrafik.gen_timetable_html(trams,vast.datetime_obj))
         f.close()
         print "\n\n\n\n\n\n\n\n\n"
-        print "\t\t\t%s" % stops[int(line)].name
+        print "\t\t\t%s, Time: %s" % (stops[int(line)].name,vast.datetime_obj)
         for i in trams:
+            
+            if prev_track != i.track:
+                print "Track %s" % i.track
+            prev_track = i.track
             print i.toTerm(vast.datetime_obj)
