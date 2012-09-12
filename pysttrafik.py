@@ -99,7 +99,7 @@ class Vasttrafik:
         
         return [Stop(i) for i in c]
     
-    def board(self,id,direction=None,arrival=False,time_span=None,departures=2):
+    def board(self,id,direction=None,arrival=False,time_span=None,departures=2,datetime_obj=None):
         '''Returns an arrival/departure board for a given station'''
         
         
@@ -114,7 +114,7 @@ class Vasttrafik:
         
         if direction != None:
             params['direction'] = direction
-        #TODO arival and departures
+        #TODO arival and departures, datetime
         if time_span != None and time_span <=1439:
             params['timeSpan'] = str(time_span)
         
@@ -143,7 +143,60 @@ class Vasttrafik:
         #Sort by track
         trams.sort(key=lambda x: x.track)
         return trams
-            
+    def trip(self,originCoord=None,originId=None,originCoordName=None,destCoord=None,destId=None,destCoordName=None,viaId=None,datetime_obj=None):
+        '''
+        originCoord = a tuple with origin coordinates (lat,lon)
+        originId = stop id
+        originCoordName = address
+        
+        destCoord
+        destId
+        destCoordName
+        
+        viaId = pass by a certain stop
+        
+        datetime_obj = search from this moment
+        '''
+        
+        service='trip'
+        params= {}
+        
+        if originCoord != None:
+            params['originCoordLat'] = originCoord[0]
+            params['originCoordLong'] = originCoord[1]
+        elif originId != None:
+            params['originId'] = originId
+        elif originCoordName != None:
+            params['originCoordName'] = originCoordName
+        
+        if destCoord != None:
+            params['destCoordLat'] = destCoord[0]
+            params['destCoordLong'] = destCoord[1]
+        elif destId != None:
+            params['destId'] = destId
+        elif destCoordName != None:
+            params['destCoordName'] = destCoordName
+        
+        if viaId != None:
+            params['viaId'] = viaId
+        
+        if datetime_obj != None:
+            params['date'] = '%04d-%02d-%02d' % (datetime_obj.year,datetime_obj.month,datetime_obj.day)
+            params['time'] = '%02d:%02d' % (datetime_obj.hour,datetime_obj.minute)
+        
+        ###Request
+        b = json.loads(self.request(service,urllib.urlencode(params))[13:-2])
+        
+        c = b['TripList']
+        
+        self.datetime_obj = to_datetime(c['serverdate'],c['servertime'])
+        
+        #TODO
+        c['Trip']
+        
+        return b
+        
+
 class BoardItem(object):
     '''This represents one item of the panel at a stop
     has a bunch of attributes to represent the stop'''
@@ -158,7 +211,6 @@ class BoardItem(object):
             self.datetime_obj+= o.datetime_obj
             return True
         return False
-        
     def __repr__(self):
         repr(self._repr)
     def toTxt(self,servertime):
