@@ -108,54 +108,84 @@ class Vasttrafik:
         else:
             service='departureBoard'
         
-        params='id=%s&maxDeparturesPerLine=2&' % id
+        params = {}
+        params['id']= str(id)
+        params['maxDeparturesPerLine'] = str(departures)
         
         if direction != None:
-            params+='direction=%s&' % direction
+            params['direction'] = direction
         #TODO arival and departures
         if time_span != None and time_span <=1439:
-            params+='timeSpan=%d&' % time_span
+            params['timeSpan'] = str(time_span)
         
-        b = json.loads(self.request(service,params)[13:-2])
+        b = json.loads(self.request(service,urllib.urlencode(params))[13:-2])
         if arrival:
             c=b['ArrivalBoard']['Arrival']
+            self.datetime_obj = to_datetime(b['ArrivalBoard']['serverdate'],b['ArrivalBoard']['servertime'])
         else:
             c=b['DepartureBoard']['Departure']
+            self.datetime_obj = to_datetime(b['DepartureBoard']['serverdate'],b['DepartureBoard']['servertime'])
         
-        self.datetime_obj = to_datetime(b['DepartureBoard']['serverdate'],b['DepartureBoard']['servertime'])
+        
         trams = [BoardItem(i) for i in c]
+        
+        #Group similar ones
+        i = 0;
+        while i < len(trams) -1:
+            j = i+1
+            while j< len(trams):
+                if trams[i].join(trams[j]):
+                    trams.pop(j)
+                else:
+                    j+=1
+            i+=1
+        
+        #Sort by track
         trams.sort(key=lambda x: x.track)
         return trams
             
 class BoardItem(object):
     '''This represents one item of the panel at a stop
     has a bunch of attributes to represent the stop'''
+    def join(self,o):
+        '''Joins another stop into this one if possible
+        Basically if there are 2 trams going at different times 
+        they will be collapsed into a single one.
+        Returns true if the other BoardItem has been joined.
+        '''
+        
+        if o.name == self.name and o.stopid == self.stopid and o.direction == self.direction:
+            self.datetime_obj+= o.datetime_obj
+            return True
+        return False
+        
     def __repr__(self):
         repr(self._repr)
     def toTxt(self,servertime):
         return self.toTerm(servertime,color=false)
     def toHtml(self,servertime):
-        delta = (self.datetime_obj - servertime)
-        delta = delta.seconds / 60
+        delta = [ ((i - servertime).seconds / 60) for i in self.datetime_obj]
+        delta.sort()
         
         name = self.getName()
         
         bus = '<td  style="background-color:%s; color:%s;" >%s</td>' % (self.fgcolor,self.bgcolor,name)
         direction = '<td>%s</td>' % self.direction
         track = '<td>%s</td>' % self.track
-        delta = '<td>%d</td>' % delta
+        delta = '<td>%s</td>' % ','.join(map(str, delta))
         
         return '<tr>%s%s%s%s</tr>' %(bus,direction,track,delta)
         
     def toTerm(self,servertime,color=True):
-        delta = (self.datetime_obj - servertime)
-        delta = delta.seconds / 60
-
+        delta = [ ((i - servertime).seconds / 60) for i in self.datetime_obj]
+        delta.sort()
         bus = self.getName(color)
         
-        return '%s %0*d -> %s' % (bus, 2, delta, self.direction)
+        return '%s %0*d -> %s # %s' % (bus, 2, delta[0], self.direction, ','.join(map(str, delta)))
     def getName(self,color=False):
-        '''Retuns a nice version of the name'''
+        '''Retuns a nice version of the name
+        If color is true, then 256-color escapes will be
+        added to give the name the color of the line'''
         name = self.name
         name = name.replace(u'Spårvagn','')
         name = name.replace(u'Buss','')
@@ -200,8 +230,8 @@ class BoardItem(object):
         self.rttime = None
         self.direction = None
         self.stroke = None
-        self.bgcolor = None
-        self.fgcolor = None
+        self.bgcolor = '#0000ff'
+        self.fgcolor = '#ffffff'
         self.night = False
         self.booking = False
         
@@ -238,7 +268,7 @@ class BoardItem(object):
         else:
             time = self.time
             
-        self.datetime_obj = to_datetime(date,time)
+        self.datetime_obj = [to_datetime(date,time),]
     
 class Stop(object):
     '''The object represents a stop
