@@ -19,7 +19,7 @@
 # 
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
-import pysttrafik
+from pysttrafik import Vasttrafik, gen_timetable_html
 import readline
 import sys
 import os
@@ -32,7 +32,7 @@ except:
     print "No configuration"
     sys.exit(1)
 
-vast = vasttrafik.Vasttrafik(key)
+vast = Vasttrafik(key)
 
 readline.parse_and_bind('tab: complete')
 readline.parse_and_bind('set editing-mode emacs')
@@ -51,11 +51,11 @@ while True:
             if i>8:
                 break
     else:
-        trams = vast.board(stops[int(line)].id,time_span=120)
+        trams = vast.board(stops[int(line)].id,time_span=120,departures=4)
         prev_track=None
         
         f= open('/tmp/t.html','w')
-        f.write(vasttrafik.gen_timetable_html(trams,vast.datetime_obj))
+        f.write(gen_timetable_html(trams,vast.datetime_obj))
         f.close()
         print "\n\n\n\n\n\n\n\n\n"
         print "\t\t%s, Time: %s\n" % (stops[int(line)].name,vast.datetime_obj)
