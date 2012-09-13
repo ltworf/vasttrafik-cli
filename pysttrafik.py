@@ -141,7 +141,7 @@ class Vasttrafik:
             i+=1
         
         #Sort by track
-        trams.sort(key=lambda x: x.track)
+        trams.sort(key=lambda x: (x.track,x.datetime_obj[0]))
         return trams
     def trip(self,originCoord=None,originId=None,originCoordName=None,destCoord=None,destId=None,destCoordName=None,viaId=None,datetime_obj=None):
         '''
