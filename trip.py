@@ -24,6 +24,7 @@ import readline
 import sys
 import os
 from configobj import ConfigObj
+import datetime
 
 try:
     config = ConfigObj("%s/.pysttrafik"% os.getenv("HOME"))
@@ -56,7 +57,16 @@ def get_stop(line):
         except:
             pass
     
+def get_time():
+    line = raw_input('Insert time? [N/y]')
+    if line != 'y':
+        return datetime.datetime.now()
+    hour = raw_input('Hour: ')
+    minute = raw_input('Minutes: ')
     
+    now = datetime.datetime.now()
+    r = datetime.datetime(now.year,now.month,now.day,int(hour),int(minute))
+    return r
     
 while True:
     line = raw_input('FROM: > ')
@@ -65,6 +75,6 @@ while True:
     line = raw_input('TO: > ')
     dest = get_stop(line)
     
-    for i in vast.trip(originId = orig.id, destId = dest.id):
+    for i in vast.trip(originId = orig.id, destId = dest.id,datetime_obj=get_time()):
         print i.toTerm()
         print "========================="
