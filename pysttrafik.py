@@ -200,8 +200,13 @@ class Trip(object):
         else:
             self.legs = [Leg(d)]
         pass
-    def toTxt(self):
-        pass
+    def toTerm(self):
+        return self.toTxt(True)
+    def toTxt(self,color=False):
+        r=''
+        for i in self.legs:
+            r+=i.toTxt(color)+'\n'
+        return r[:-1]
 class LegHalf(object):
     def __init__(self,d):
         self.date = d['date']
@@ -227,11 +232,10 @@ class LegHalf(object):
         self.datetime_obj = to_datetime(self.date,self.time)
         
 class Leg(object):
-    def getTerm(self,servertime):
-        return self.getTxt(servertime,True)
-    def getTxt(self,color=False):
-        delta = str(self.datetime_obj)
-        return '%s Departure: %s   %s -> %s ' %(self.getName(color),self.origin.name, self.destination.name,delta)
+    def toTerm(self):
+        return self.toTxt(True)
+    def toTxt(self,color=False):
+        return '%s %s\t%s -> %s ' %(self.getName(color),str(self.origin.datetime_obj), self.origin.name, self.destination.name)
     def getName(self,color=False):
         '''Retuns a nice version of the name
         If color is true, then 256-color escapes will be
@@ -240,6 +244,9 @@ class Leg(object):
         name = name.replace(u'Spårvagn','')
         name = name.replace(u'Buss','')
         name += " "
+        
+        if self.direction !=None:
+            name+=self.direction+ " "
         
         if self.wheelchair:
             name += u"♿ "
@@ -262,7 +269,6 @@ class Leg(object):
         fgcolor = int('0x' + self.bgcolor[1:],16)
         return cmap.colorize(name,fgcolor,bg=bgcolor)
     def __init__(self,d):
-        print d.__class__, d
         self._repr = d
         self.name = d['name']
         self.veichle_type = d['type']

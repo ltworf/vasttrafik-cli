@@ -65,5 +65,6 @@ while True:
     line = raw_input('TO: > ')
     dest = get_stop(line)
     
-    print vast.trip(originId = orig.id, destId = dest.id)
-    
+    for i in vast.trip(originId = orig.id, destId = dest.id):
+        print i.toTerm()
+        print "========================="
