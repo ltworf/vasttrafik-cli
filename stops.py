@@ -51,7 +51,11 @@ while True:
             if i>8:
                 break
     else:
-        trams = vast.board(stops[int(line)].id,time_span=120,departures=4)
+        try:
+            trams = vast.board(stops[int(line)].id,time_span=120,departures=4)
+        except:
+            print "Error"
+            sys.exit(1)
         prev_track=None
         
         f= open('/tmp/t.html','w')
