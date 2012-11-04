@@ -1,7 +1,0 @@
-The project provides a python module to access the Västtrafik public API.
-
-Västtrafik is the public transport company in the county of Västra Götaland, Sweden.
-
-The project provides two command line tools: trip and stops. I think the name is self explaining.
-
-
