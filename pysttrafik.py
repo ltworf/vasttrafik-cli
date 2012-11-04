@@ -126,7 +126,6 @@ class Vasttrafik:
             c=b['DepartureBoard']['Departure']
             self.datetime_obj = to_datetime(b['DepartureBoard']['serverdate'],b['DepartureBoard']['servertime'])
         
-        
         trams = [BoardItem(i) for i in c]
         
         #Group similar ones
@@ -191,10 +190,110 @@ class Vasttrafik:
         
         self.datetime_obj = to_datetime(c['serverdate'],c['servertime'])
         
-        #TODO
-        c['Trip']
+        return [Trip(i) for i in c['Trip']]
         
-        return b
+class Trip(object):
+    def __init__(self,d):
+        d = d['Leg']
+        
+        self.legs = [Leg(i) for i in d]
+        pass
+    def toTxt(self):
+        pass
+class LegHalf(object):
+    def __init__(self,d):
+        self.date = d['date']
+        self.id = d['id']
+        self.name = d['name']
+        self.routeIdx = d['routeIdx']
+        self.time = d['time']
+        
+        
+        self.track = d['track']
+        self.type = d['type']
+        
+        if 'rtDate' in d:
+            self.date = d['rtDate']
+        if 'rtTime' in d:
+            self.time = d['rtTime']
+        
+        self.datetime_obj = to_datetime(self.date,self.time)
+        
+class Leg(object):
+    def getTerm(self,servertime):
+        return self.getTxt(servertime,True)
+    def getTxt(self,color=False):
+        delta = str(self.datetime_obj)
+        return '%s Departure: %s   %s -> %s ' %(self.getName(color),self.origin.name, self.destination.name,delta)
+    def getName(self,color=False):
+        '''Retuns a nice version of the name
+        If color is true, then 256-color escapes will be
+        added to give the name the color of the line'''
+        name = self.name
+        name = name.replace(u'Spårvagn','')
+        name = name.replace(u'Buss','')
+        name += " "
+        
+        if self.wheelchair:
+            name += u"♿ "
+        if self.night:
+            name += u"☾ "
+        
+        while len(name)<20:
+            name=" "+name
+        
+        if not color:
+            return name
+    
+        try:
+           from ColorMap import XTermColorMap, VT100ColorMap
+           cmap = XTermColorMap()
+        except:
+           return name
+        
+        bgcolor = int('0x' + self.fgcolor[1:],16)
+        fgcolor = int('0x' + self.bgcolor[1:],16)
+        return cmap.colorize(name,fgcolor,bg=bgcolor)
+    def __init__(self,d):
+        self._repr = d
+        self.name = d['name']
+        self.veichle_type = d['type']
+        self.id = d['id']
+        
+        self.origin = LegHalf(d['Origin'])
+        self.destination = LegHalf(d['Destination'])
+        
+        #optionals
+        self.direction = None
+        self.stroke = None
+        self.bgcolor = '#0000ff'
+        self.fgcolor = '#ffffff'
+        self.night = False
+        self.booking = False
+        
+        self.wheelchair = 'accessibility' in d and d['accessibility'] == 'wheelChair'
+        
+        if 'track' in d:
+            self.track = d['track']
+        if 'rtDate' in d:
+            self.rtdate = d['rtDate']
+        if 'rtTime' in d:
+            self.rttime = d['rtTime']
+        if 'rtTrack' in d:
+            self.track = d['rtTrack']
+        if 'night' in d:
+            self.night = True
+        #TODO booking    
+        if 'direction' in d:
+            self.direction = d['direction']
+        
+
+        if 'bgColor' in d:
+            self.bgcolor = d['bgColor']
+        if 'stroke' in d:
+            self.stroke = d['stroke']
+        if 'fgColor' in d:
+            self.fgcolor = d['fgColor']
         
 
 class BoardItem(object):
@@ -266,6 +365,9 @@ class BoardItem(object):
         
     def __init__(self,d):
         self._repr = d
+        if not isinstance(d,dict):
+            raise Exception("Invalid data")
+        
         self.name = d['name']
         self.veichle_type = d['type']
         self.stop = d['stop']
