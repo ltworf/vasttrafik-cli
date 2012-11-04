@@ -235,7 +235,7 @@ class Leg(object):
     def toTerm(self):
         return self.toTxt(True)
     def toTxt(self,color=False):
-        return '%s %s\t%s -> %s ' %(self.getName(color),str(self.origin.datetime_obj), self.origin.name, self.destination.name)
+        return '%s %0*d:%0*d\t%s -> %s ' %(self.getName(color),2,self.origin.datetime_obj.hour,2,self.origin.datetime_obj.minute , self.origin.name, self.destination.name)
     def getName(self,color=False):
         '''Retuns a nice version of the name
         If color is true, then 256-color escapes will be
