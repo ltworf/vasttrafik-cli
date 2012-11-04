@@ -195,8 +195,10 @@ class Vasttrafik:
 class Trip(object):
     def __init__(self,d):
         d = d['Leg']
-        
-        self.legs = [Leg(i) for i in d]
+        if isinstance(d,list):
+            self.legs = [Leg(i) for i in d]
+        else:
+            self.legs = [Leg(d)]
         pass
     def toTxt(self):
         pass
@@ -205,11 +207,16 @@ class LegHalf(object):
         self.date = d['date']
         self.id = d['id']
         self.name = d['name']
-        self.routeIdx = d['routeIdx']
+        if 'routeIdx' in d:
+            self.routeIdx = d['routeIdx']
+        else:
+            self.routeIdx = None
         self.time = d['time']
         
-        
-        self.track = d['track']
+        if 'track' in d:
+            self.track = d['track']
+        else:
+            self.track = None
         self.type = d['type']
         
         if 'rtDate' in d:
@@ -255,10 +262,14 @@ class Leg(object):
         fgcolor = int('0x' + self.bgcolor[1:],16)
         return cmap.colorize(name,fgcolor,bg=bgcolor)
     def __init__(self,d):
+        print d.__class__, d
         self._repr = d
         self.name = d['name']
         self.veichle_type = d['type']
-        self.id = d['id']
+        if 'id' in d:
+            self.id = d['id']
+        else:
+            self.id = None
         
         self.origin = LegHalf(d['Origin'])
         self.destination = LegHalf(d['Destination'])
