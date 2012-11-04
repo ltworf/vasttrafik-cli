@@ -68,13 +68,18 @@ def get_time():
     r = datetime.datetime(now.year,now.month,now.day,int(hour),int(minute))
     return r
     
-while True:
+def main():
     line = raw_input('FROM: > ')
     orig = get_stop(line)
     
     line = raw_input('TO: > ')
     dest = get_stop(line)
     
-    for i in vast.trip(originId = orig.id, destId = dest.id,datetime_obj=get_time()):
+    time = get_time()
+    
+    print '\t',orig.name, u'→', dest.name
+    for i in vast.trip(originId = orig.id, destId = dest.id,datetime_obj=time):
         print i.toTerm()
         print "========================="
+
+main()
