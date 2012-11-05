@@ -65,7 +65,11 @@ def get_time():
     minute = raw_input('Minutes: ')
     
     now = datetime.datetime.now()
-    r = datetime.datetime(now.year,now.month,now.day,int(hour),int(minute))
+    r = now.replace(minute=int(minute),hour=int(hour))
+    
+    if (r-now).total_seconds() <0:
+        #Must increment one day
+        r+=datetime.timedelta(days=1)
     return r
     
 def main():
