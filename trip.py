@@ -81,7 +81,7 @@ def main():
     
     time = get_time()
     
-    print '\t',orig.name, u'→', dest.name
+    print u'\t%s → %s\t Trips since: %s' %(orig.name, dest.name, str(time))
     for i in vast.trip(originId = orig.id, destId = dest.id,datetime_obj=time):
         print i.toTerm()
         print "========================="
