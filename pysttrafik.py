@@ -227,6 +227,14 @@ class Vasttrafik:
         return [Trip(i) for i in c['Trip']]
         
 class Trip(object):
+    '''
+    A trip contains a list of Legs (attribute legs).
+    If the stops are directly connected the list will only
+    have 1 element.
+    
+    If on a change the traveler must go from one Track to another,
+    a Leg of veichle_type WALK will be between the other two Legs.
+    '''
     def __init__(self,d):
         d = d['Leg']
         if isinstance(d,list):
@@ -266,12 +274,24 @@ class LegHalf(object):
         self.datetime_obj = to_datetime(self.date,self.time)
         
 class Leg(object):
+    '''
+    a Leg is part of a Trip, and is performed on one veichle or by foot.
+    
+    it has an origin and a destination of type LegHalf
+    '''
     def toTerm(self):
+        '''
+        Returns a pretty printed string representing the Leg of the trip.
+        Escape codes to color the terminal are added.
+        '''
         return self.toTxt(True)
     def toTxt(self,color=False):
+        '''
+        Returns a pretty printed string representing the Leg of the trip.
+        '''
         return '%s %0*d:%0*d\t%s -> %s ' %(self.getName(color),2,self.origin.datetime_obj.hour,2,self.origin.datetime_obj.minute , self.origin.name, self.destination.name)
     def getName(self,color=False):
-        '''Retuns a nice version of the name
+        '''Returns a nice version of the name
         If color is true, then 256-color escapes will be
         added to give the name the color of the line'''
         name = self.name
@@ -379,13 +399,20 @@ class BoardItem(object):
         return '<tr>%s%s%s%s</tr>' %(bus,direction,track,delta)
         
     def toTerm(self,servertime,color=True):
+        '''Returns a string representing the BoardItem colorized using
+        terminal escape codes.
+        
+        Servertime must be retrieved from the Vasttrafik class, and indicates
+        the time on the server, it will be used to show the difference in
+        minutes before the arrival.
+        '''
         delta = [ ((i - servertime).seconds / 60) for i in self.datetime_obj]
         delta.sort()
         bus = self.getName(color)
         
         return '%s %0*d -> %s # %s' % (bus, 2, delta[0], self.direction, ','.join(map(str, delta)))
     def getName(self,color=False):
-        '''Retuns a nice version of the name
+        '''Returns a nice version of the name
         If color is true, then 256-color escapes will be
         added to give the name the color of the line'''
         name = self.name
