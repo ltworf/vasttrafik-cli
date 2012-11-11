@@ -41,21 +41,26 @@ readline.set_completer_delims(" ")
 
 
 
-def get_stop(line):
-    stops=[]
-    stops = vast.location(line)
-    
-    for i in range(len(stops)):
-        print "%d: %s" % (i,stops[i].name)
-        if i>8:
-            break
+def get_stop(prompt):
     
     while True:
-        line = raw_input('> ')
-        try:
-            return stops[int(line)]
-        except:
-            pass
+        line = raw_input(prompt)
+        if len(line)==0:
+            return None
+    
+        stops = vast.location(line)
+    
+        for i in range(len(stops)):
+            print "%d: %s" % (i,stops[i].name)
+            if i>8:
+                break
+    
+        while True:
+            line = raw_input('> ')
+            try:
+                return stops[int(line)]
+            except:
+                break
     
 def get_time():
     line = raw_input('Insert time? [N/y]')
@@ -73,11 +78,11 @@ def get_time():
     return r
     
 def main():
-    line = raw_input('FROM: > ')
-    orig = get_stop(line)
+    orig = get_stop('FROM: > ')
+    dest = get_stop('TO: > ')
     
-    line = raw_input('TO: > ')
-    dest = get_stop(line)
+    if orig==None or dest==None:
+        return
     
     time = get_time()
     
