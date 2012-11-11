@@ -19,20 +19,16 @@
 # 
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
-from pysttrafik import Vasttrafik, gen_timetable_html
+from pysttrafik import Vasttrafik, gen_timetable_html, get_key
 import readline
 import sys
-import os
-from configobj import ConfigObj
 import datetime
 
-try:
-    config = ConfigObj("%s/.pysttrafik"% os.getenv("HOME"))
-    key = config['key']
-except:
+key= get_key()
+if key == None:
     print "No configuration"
     sys.exit(1)
-
+    
 vast = Vasttrafik(key)
 
 readline.parse_and_bind('tab: complete')

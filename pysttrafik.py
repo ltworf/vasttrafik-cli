@@ -24,6 +24,36 @@ import json
 import datetime
 import re
 
+def get_key():
+    '''
+    This function tries to load the API key from some configuration files.
+    It will try, in the order:
+        - /etc/pysttrafik.conf
+        - ~/.pysttrafik
+    
+    If the files aren't found or they don't contain the key attribute then
+    None will be returned, otherwise, a string containing the key will be 
+    returned.
+    '''
+    from configobj import ConfigObj
+    import os
+    from os.path import exists
+    
+    paths = ('/etc/pysttrafik.conf',
+             "%s/.pysttrafik"% os.getenv("HOME"),
+            )
+    
+    path = None
+    for i in paths:
+        if exists(i):
+            path = i
+            break
+    try:
+        config = ConfigObj(path)
+        return config['key']
+    except:
+        return None
+
 def gen_timetable_html(stops,datetime_obj):
     '''generates the HTML to a timetable
     takes the tram list (resulting from a call to board)
@@ -54,6 +84,10 @@ def to_datetime(date,time):
 
 class Vasttrafik:
     def __init__(self,key,api="api.vasttrafik.se/bin/rest.exe/v1"):
+        '''
+        key is the API key that must be sent on every request to obtain a reply.
+        Contact Västtrafik for details on how to obtain one.
+        '''
         self.key = key
         self.api = api
         self.datetime_obj = None
