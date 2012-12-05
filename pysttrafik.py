@@ -24,6 +24,11 @@ import json
 import datetime
 import re
 
+try:
+    from xtermcolor import colorize
+except:
+    colorize = lambda x,rgb=None, ansi=None, bg=None, ansi_bg=None, fd=1: x
+
 def get_key():
     '''
     This function tries to load the API key from some configuration files.
@@ -313,15 +318,9 @@ class Leg(object):
         if not color:
             return name
     
-        try:
-           from ColorMap import XTermColorMap, VT100ColorMap
-           cmap = XTermColorMap()
-        except:
-           return name
-        
         bgcolor = int('0x' + self.fgcolor[1:],16)
         fgcolor = int('0x' + self.bgcolor[1:],16)
-        return cmap.colorize(name,fgcolor,bg=bgcolor)
+        return colorize(name.encode('utf8'),fgcolor,bg=bgcolor).decode('utf8')
     def __init__(self,d):
         self._repr = d
         self.name = d['name']
@@ -409,7 +408,6 @@ class BoardItem(object):
         delta = [ ((i - servertime).seconds / 60) for i in self.datetime_obj]
         delta.sort()
         bus = self.getName(color)
-        
         return '%s %0*d -> %s # %s' % (bus, 2, delta[0], self.direction, ','.join(map(str, delta)))
     def getName(self,color=False):
         '''Returns a nice version of the name
@@ -431,15 +429,9 @@ class BoardItem(object):
         if not color:
             return name
     
-        try:
-           from ColorMap import XTermColorMap, VT100ColorMap
-           cmap = XTermColorMap()
-        except:
-           return name
-        
         bgcolor = int('0x' + self.fgcolor[1:],16)
         fgcolor = int('0x' + self.bgcolor[1:],16)
-        return cmap.colorize(name,fgcolor,bg=bgcolor)
+        return colorize(name.encode('utf8'),fgcolor,bg=bgcolor).decode('utf8')
         
     def __init__(self,d):
         self._repr = d
