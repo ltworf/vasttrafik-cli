@@ -1,5 +1,11 @@
 *~
+*.pyo
 *.pyc
 auth.txt
+key.py
 test.py
 
+HAFAS REST API URL Generator 1_07.xls
+HAFAS ReST Interface VT 1_07.pdf
+gui.py
+selgui.py
