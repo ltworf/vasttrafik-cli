@@ -1,0 +1,14 @@
+Source: pyvasttrafik
+Section: office
+Priority: optional
+Maintainer: Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>
+Build-Depends: debhelper (>= 7.0.50~), python, python-support
+Standards-Version: 3.9.2
+Homepage: https://github.com/ltworf/pysttrafik
+
+Package: pyvasttrafik
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, python-qt4
+Description: Travel planner for Gothenburg
+ Provides a GUI to check trips and boards in stops.
