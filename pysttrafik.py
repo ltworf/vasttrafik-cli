@@ -20,9 +20,14 @@
 
 import urllib2
 import urllib
-import json
 import datetime
 import re
+
+try:
+    import json
+except:
+    import simplejson
+    json = simplejson.simplejson()
 
 try:
     from xtermcolor import colorize
@@ -100,8 +105,11 @@ class Vasttrafik:
     def request(self,service,param):
         url = "http://%s/%s?format=json&jsonpCallback=processJSON&authKey=%s&%s" % (self.api,service,self.key,param)
         
-        f = urllib2.urlopen(url,timeout=10)
-    
+        try:
+            f = urllib2.urlopen(url,timeout=10)
+        except:
+            f = urllib2.urlopen(url)
+            
         r= ""
     
         while True:
