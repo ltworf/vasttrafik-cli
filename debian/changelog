@@ -1,5 +1,12 @@
+pyvasttrafik (0.2) UNRELEASED; urgency=low
+
+  * Fix bug about sorting times
+  * Shows arrival time too in trips 
+
+ -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Thu, 07 Mar 2013 00:37:15 +0100
+
 pyvasttrafik (0.1) UNRELEASED; urgency=low
 
   * Initial release
 
- -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Sat, 26 Jan 2013 17:35:11 +0100
+ -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Thu, 07 Mar 2013 00:37:11 +0100
