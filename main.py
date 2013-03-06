@@ -110,8 +110,9 @@ class AppUI(QtGui.QMainWindow):
             item.setText(2,i.direction)
             
             
-            delta = [ str((q - self.vast.datetime_obj).seconds / 60) for q in i.datetime_obj]
+            delta = [(q - self.vast.datetime_obj).seconds / 60 for q in i.datetime_obj]
             delta.sort()
+            delta = [str(i) for i in delta]
             item.setText(3,', '.join(delta))
             
             self.stopList.addTopLevelItem(item)
