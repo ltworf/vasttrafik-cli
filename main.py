@@ -37,10 +37,13 @@ class AppUI(QtGui.QMainWindow):
         self.stopList.headerItem().setText(1,'')
         self.stopList.headerItem().setText(2,'Direction')
         self.stopList.headerItem().setText(3,'Minutes')
+        
+        self.tripList.setColumnCount(5)
         self.tripList.headerItem().setText(0,'Departure')
         self.tripList.headerItem().setText(1,'')
         self.tripList.headerItem().setText(2,'Track')
         self.tripList.headerItem().setText(3,'Destination')
+        self.tripList.headerItem().setText(4,'Arrival')
         
         
         QtCore.QObject.connect(self.stop_selector,QtCore.SIGNAL("selected()"),self.boardselected)
@@ -72,8 +75,6 @@ class AppUI(QtGui.QMainWindow):
         
         trams = self.vast.board(self.stop_selector.stopId,time_span=120,departures=4)
         
-
-        self.stopList.setColumnCount(4)
 
         #Set content
         for i in trams:
@@ -130,7 +131,7 @@ class AppUI(QtGui.QMainWindow):
         
         trips=self.vast.trip(originId = self.from_selector.stopId, destId = self.to_selector.stopId,datetime_obj=d)
         
-        self.tripList.setColumnCount(4)
+        
         self.tripList.clear()
         
         for trip in trips:
@@ -171,6 +172,8 @@ class AppUI(QtGui.QMainWindow):
                 if i.origin.track !=None:
                     leg.setText(2,i.origin.track)
                 leg.setText(3,i.destination.name)
+                
+                leg.setText(4,str(i.destination.datetime_obj.strftime('%H:%M')))
                 
                 item.addChild(leg)
             item.setText(0,'%02d:%02d' % (trip.legs[0].origin.datetime_obj.hour,trip.legs[0].origin.datetime_obj.minute))
