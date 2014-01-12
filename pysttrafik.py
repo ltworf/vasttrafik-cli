@@ -251,7 +251,7 @@ class Trip(object):
     have 1 element.
     
     If on a change the traveler must go from one Track to another,
-    a Leg of veichle_type WALK will be between the other two Legs.
+    a Leg of vehicle_type WALK will be between the other two Legs.
     '''
     def __init__(self,d):
         d = d['Leg']
@@ -293,7 +293,7 @@ class LegHalf(object):
         
 class Leg(object):
     '''
-    a Leg is part of a Trip, and is performed on one veichle or by foot.
+    a Leg is part of a Trip, and is performed on one vehicle or by foot.
     
     it has an origin and a destination of type LegHalf
     '''
@@ -337,7 +337,7 @@ class Leg(object):
     def __init__(self,d):
         self._repr = d
         self.name = d['name']
-        self.veichle_type = d['type']
+        self.vehicle_type = d['type']
         if 'id' in d:
             self.id = d['id']
         else:
@@ -452,7 +452,7 @@ class BoardItem(object):
             raise Exception("Invalid data")
         
         self.name = d['name']
-        self.veichle_type = d['type']
+        self.vehicle_type = d['type']
         self.stop = d['stop']
         self.stopid = d['stopid']
         self.journeyid = d['journeyid']
