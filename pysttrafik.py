@@ -96,7 +96,8 @@ class Vasttrafik:
     def __init__(self,key,api="api.vasttrafik.se/bin/rest.exe/v1"):
         '''
         key is the API key that must be sent on every request to obtain a reply.
-        Contact Västtrafik for details on how to obtain one.
+        you can obtain one at api.vasttrafik.se, but it will be activated the
+        night after registration.
         '''
         self.key = key
         self.api = api
@@ -118,6 +119,10 @@ class Vasttrafik:
                 break
             r+=l
         f.close()
+
+        if r.strip().startswith('Invalid authKey'):
+            raise Exception("Invalid authKey")
+    
         return r
         
     def location(self,user_input):
