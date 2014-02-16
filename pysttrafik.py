@@ -104,7 +104,7 @@ class Vasttrafik:
         self.datetime_obj = None
         
     def request(self,service,param):
-        url = "http://%s/%s?format=json&jsonpCallback=processJSON&authKey=%s&%s" % (self.api,service,self.key,param)
+        url = "http://%s/%s?format=json&authKey=%s&%s" % (self.api,service,self.key,param)
         
         try:
             f = urllib2.urlopen(url,timeout=10)
@@ -122,16 +122,17 @@ class Vasttrafik:
 
         if r.strip().startswith('Invalid authKey'):
             raise Exception("Invalid authKey")
-    
+
         return r
         
     def location(self,user_input):
         '''Returns a list of Stop objects, completing from the user input'''
         a = self.request("location.name",urllib.urlencode({'input':user_input}))
-        b = json.loads(a[13:-2]) #They return me some crap around the json
-        c=b["LocationList"]['StopLocation']
+        b = json.loads(a)
+        c = b["LocationList"]['StopLocation']
         
         return [Stop(i) for i in c]
+
     def nearby(self,lat,lon,stops=10,dist=None):
         '''
         Returns the list of stops close to a certain location
@@ -146,11 +147,11 @@ class Vasttrafik:
         if dist != None:
             params += '&maxDist=%d' % dist
             
-        b = json.loads(self.request('location.nearbystops',params)[13:-2])
-        c=b["LocationList"]['StopLocation']
+        b = json.loads(self.request('location.nearbystops',params))
+        c = b["LocationList"]['StopLocation']
         
         return [Stop(i) for i in c]
-    
+
     def board(self,id,direction=None,arrival=False,time_span=None,departures=2,datetime_obj=None):
         '''Returns an arrival/departure board for a given station'''
         
@@ -169,14 +170,21 @@ class Vasttrafik:
         #TODO arival and departures, datetime
         if time_span != None and time_span <=1439:
             params['timeSpan'] = str(time_span)
+        if datetime_obj != None:
+            params['date'] = '%04d-%02d-%02d' % (datetime_obj.year,datetime_obj.month,datetime_obj.day)
+            params['time'] = '%02d:%02d' % (datetime_obj.hour,datetime_obj.minute)
+
         
-        b = json.loads(self.request(service,urllib.urlencode(params))[13:-2])
+        b = json.loads(self.request(service, urllib.urlencode(params)))
         if arrival:
-            c=b['ArrivalBoard']['Arrival']
+            c = b['ArrivalBoard']['Arrival']
             self.datetime_obj = to_datetime(b['ArrivalBoard']['serverdate'],b['ArrivalBoard']['servertime'])
         else:
-            c=b['DepartureBoard']['Departure']
+            c = b['DepartureBoard']['Departure']
             self.datetime_obj = to_datetime(b['DepartureBoard']['serverdate'],b['DepartureBoard']['servertime'])
+
+        if not isinstance(c, list):
+            c = [c]
         
         trams = [BoardItem(i) for i in c]
         
@@ -194,6 +202,7 @@ class Vasttrafik:
         #Sort by track
         trams.sort(key=lambda x: (x.track,x.datetime_obj[0]))
         return trams
+    
     def trip(self,originCoord=None,originId=None,originCoordName=None,destCoord=None,destId=None,destCoordName=None,viaId=None,datetime_obj=None):
         '''
         originCoord = a tuple with origin coordinates (lat,lon)
@@ -236,7 +245,7 @@ class Vasttrafik:
             params['time'] = '%02d:%02d' % (datetime_obj.hour,datetime_obj.minute)
         
         ###Request
-        b = json.loads(self.request(service,urllib.urlencode(params))[13:-2])
+        b = json.loads(self.request(service,urllib.urlencode(params)))
         
         c = b['TripList']
         
@@ -260,14 +269,18 @@ class Trip(object):
         else:
             self.legs = [Leg(d)]
         pass
+
     def toTerm(self):
         return self.toTxt(True)
+
     def toTxt(self,color=False):
         r=''
         for i in self.legs:
             r+=i.toTxt(color)+'\n'
         return r[:-1]
+
 class LegHalf(object):
+
     def __init__(self,d):
         self.date = d['date']
         self.id = d['id']
@@ -308,6 +321,7 @@ class Leg(object):
         Returns a pretty printed string representing the Leg of the trip.
         '''
         return '%s %0*d:%0*d\t%s -> %s ' %(self.getName(color),2,self.origin.datetime_obj.hour,2,self.origin.datetime_obj.minute , self.origin.name, self.destination.name)
+
     def getName(self,color=False):
         '''Returns a nice version of the name
         If color is true, then 256-color escapes will be
@@ -334,6 +348,7 @@ class Leg(object):
         bgcolor = int('0x' + self.fgcolor[1:],16)
         fgcolor = int('0x' + self.bgcolor[1:],16)
         return colorize(name.encode('utf8'),fgcolor,bg=bgcolor).decode('utf8')
+
     def __init__(self,d):
         self._repr = d
         self.name = d['name']
@@ -378,7 +393,6 @@ class Leg(object):
         if 'fgColor' in d:
             self.fgcolor = d['fgColor']
         
-
 class BoardItem(object):
     '''This represents one item of the panel at a stop
     has a bunch of attributes to represent the stop'''
@@ -395,8 +409,10 @@ class BoardItem(object):
         return False
     def __repr__(self):
         repr(self._repr)
+
     def toTxt(self,servertime):
         return self.toTerm(servertime,color=false)
+
     def toHtml(self,servertime):
         delta = [ ((i - servertime).seconds / 60) for i in self.datetime_obj]
         delta.sort()
@@ -422,6 +438,7 @@ class BoardItem(object):
         delta.sort()
         bus = self.getName(color)
         return '%s %0*d -> %s # %s' % (bus, 2, delta[0], self.direction, ','.join(map(str, delta)))
+
     def getName(self,color=False):
         '''Returns a nice version of the name
         If color is true, then 256-color escapes will be
@@ -445,7 +462,7 @@ class BoardItem(object):
         bgcolor = int('0x' + self.fgcolor[1:],16)
         fgcolor = int('0x' + self.bgcolor[1:],16)
         return colorize(name.encode('utf8'),fgcolor,bg=bgcolor).decode('utf8')
-        
+
     def __init__(self,d):
         self._repr = d
         if not isinstance(d,dict):
@@ -526,11 +543,15 @@ class Stop(object):
         self.lat = d['lat']
         self.lon = d['lon']
         self.name = d['name']
+
     def __unicode__(self):
         return self.name
+
     def __repr__(self):
         d={'id':self.id,'idx':self.idx,'lat':self.lat,'lon':self.lon,'name':self.name}
+
         return d.__repr__()
+
     def __eq__(self,o):
         '''Compares using the id field'''
         if not isinstance(o,Stop):
