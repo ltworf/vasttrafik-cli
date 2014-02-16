@@ -263,7 +263,6 @@ class Trip(object):
     a Leg of vehicle_type WALK will be between the other two Legs.
     '''
     def __init__(self,d):
-        #print d
         d = d['Leg']
         if isinstance(d,list):
             self.legs = [Leg(i) for i in d]
@@ -395,7 +394,6 @@ class Leg(object):
             self.fgcolor = d['fgColor']
         
 class BoardItem(object):
-
     '''This represents one item of the panel at a stop
     has a bunch of attributes to represent the stop'''
     def join(self,o):
@@ -527,7 +525,6 @@ class BoardItem(object):
         self.datetime_obj = [to_datetime(date,time),]
     
 class Stop(object):
-
     '''The object represents a stop
     
     it has attributes:
