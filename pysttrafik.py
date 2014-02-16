@@ -306,7 +306,7 @@ class LegHalf(object):
         
 class Leg(object):
     '''
-    a Leg is part of a Trip, and is performed on one veichle or by foot.
+    a Leg is part of a Trip, and is performed on one vehicle or by foot.
     
     it has an origin and a destination of type LegHalf
     '''
