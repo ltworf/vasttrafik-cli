@@ -10,3 +10,9 @@ Västtrafik is the public transport company in the county of Västra Götaland,
 Sweden.
 
 ![ScreenShot](https://raw.github.com/ltworf/pysttrafik/master/screenshot.png)
+
+
+Suggestions
+===========
+Suggestions for improvements are welcome only if they come together
+with a patch.
