@@ -339,7 +339,19 @@ class Leg(object):
         '''
         Returns a pretty printed string representing the Leg of the trip.
         '''
-        return '%s %0*d:%0*d\t%s -> %s ' % (self.getName(color), 2, self.origin.datetime_obj.hour, 2, self.origin.datetime_obj.minute, self.origin.name, self.destination.name)
+        return '%s %0*d:%0*d\t%0*d:%0*d\t%s -> %s ' % (
+            self.getName(color),
+            2,
+            self.origin.datetime_obj.hour,
+            2,
+            self.origin.datetime_obj.minute,
+            2,
+            self.destination.datetime_obj.hour,
+            2,
+            self.destination.datetime_obj.minute,
+            self.origin.name,
+            self.destination.name
+        )
 
     def getName(self, color=False):
         '''Returns a nice version of the name
