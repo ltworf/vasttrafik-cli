@@ -36,7 +36,10 @@ readline.parse_and_bind('set editing-mode emacs')
 readline.set_completer_delims(" ")
 
 
-def get_stop(prompt):
+def get_stop(prompt, preset=None):
+
+    if preset:
+        return vast.location(preset)[0]
 
     while True:
         line = raw_input(prompt)
@@ -75,13 +78,17 @@ def get_time():
 
 
 def main():
-    orig = get_stop('FROM: > ')
-    dest = get_stop('TO: > ')
+    orig = sys.argv[1] if len(sys.argv) > 2 else None
+    dest = sys.argv[2] if len(sys.argv) > 2 else None
+
+    orig = get_stop('FROM: > ', orig)
+    dest = get_stop('TO: > ', dest)
 
     if orig == None or dest == None:
         return
 
-    time = get_time()
+    if len(sys.argv) == 1:
+        time = get_time()
 
     print u'\t%s → %s\t Trips since: %s' % (orig.name, dest.name, str(time))
     for i in vast.trip(originId=orig.id, destId=dest.id, datetime_obj=time):
