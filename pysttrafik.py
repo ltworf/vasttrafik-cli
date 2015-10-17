@@ -137,6 +137,8 @@ class Vasttrafik:
         b = json.loads(a)
         c = b["LocationList"]['StopLocation']
 
+        if isinstance(c, dict):
+            c = [c]
         return [Stop(i) for i in c]
 
     def nearby(self, lat, lon, stops=10, dist=None):
