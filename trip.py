@@ -61,7 +61,10 @@ def get_stop(prompt, preset=None):
                 break
 
 
-def get_time():
+def get_time(default):
+    if default:
+        return datetime.datetime.now()
+
     line = raw_input('Insert time? [N/y]')
     if line != 'y':
         return datetime.datetime.now()
@@ -87,8 +90,7 @@ def main():
     if orig == None or dest == None:
         return
 
-    if len(sys.argv) == 1:
-        time = get_time()
+    time = get_time(len(sys.argv) == 3)
 
     print u'\t%s → %s\t Trips since: %s' % (orig.name, dest.name, str(time))
     for i in vast.trip(originId=orig.id, destId=dest.id, datetime_obj=time):
