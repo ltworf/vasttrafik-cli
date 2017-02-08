@@ -18,8 +18,8 @@
 #
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
-import urllib2
-import urllib
+import urllib.request
+import urllib.parse
 import datetime
 import re
 
@@ -111,12 +111,10 @@ class Vasttrafik:
         url = "http://%s/%s?format=json&authKey=%s&%s" % (
             self.api, service, self.key, param)
 
-        try:
-            f = urllib2.urlopen(url, timeout=10)
-        except:
-            f = urllib2.urlopen(url)
+        req = urllib.request.Request(url)
+        f = urllib.request.urlopen(req)
 
-        r = ""
+        r = b''
 
         while True:
             l = f.read()
@@ -125,15 +123,15 @@ class Vasttrafik:
             r += l
         f.close()
 
-        if r.strip().startswith('Invalid authKey'):
-            raise Exception("Invalid authKey")
+        if r.strip().startswith(b'Invalid authKey'):
+            raise Exception('Invalid authKey')
 
-        return r
+        return r.decode('utf8')
 
     def location(self, user_input):
         '''Returns a list of Stop objects, completing from the user input'''
         a = self.request(
-            "location.name", urllib.urlencode({'input': user_input}))
+            "location.name", urllib.parse.urlencode({'input': user_input}))
         b = json.loads(a)
         c = b["LocationList"]['StopLocation']
 
@@ -184,7 +182,7 @@ class Vasttrafik:
             params['time'] = '%02d:%02d' % (
                 datetime_obj.hour, datetime_obj.minute)
 
-        b = json.loads(self.request(service, urllib.urlencode(params)))
+        b = json.loads(self.request(service, urllib.parse.urlencode(params)))
         if arrival:
             c = b['ArrivalBoard']['Arrival']
             self.datetime_obj = to_datetime(
@@ -258,7 +256,7 @@ class Vasttrafik:
                 datetime_obj.hour, datetime_obj.minute)
 
         # Request
-        b = json.loads(self.request(service, urllib.urlencode(params)))
+        b = json.loads(self.request(service, urllib.parse.urlencode(params)))
 
         c = b['TripList']
 
