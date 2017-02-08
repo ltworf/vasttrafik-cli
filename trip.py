@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # coding=UTF-8
 # pysttrafik
@@ -26,7 +26,7 @@ import datetime
 
 key = get_key()
 if key == None:
-    print "No configuration"
+    print("No configuration")
     sys.exit(1)
 
 vast = Vasttrafik(key)
@@ -42,19 +42,19 @@ def get_stop(prompt, preset=None):
         return vast.location(preset)[0]
 
     while True:
-        line = raw_input(prompt)
+        line = input(prompt)
         if len(line) == 0:
             return None
 
         stops = vast.location(line)
 
         for i in range(len(stops)):
-            print "%d: %s" % (i, stops[i].name)
+            print("%d: %s" % (i, stops[i].name))
             if i > 8:
                 break
 
         while True:
-            line = raw_input('> ')
+            line = input('> ')
             try:
                 return stops[int(line)]
             except:
@@ -65,11 +65,11 @@ def get_time(default):
     if default:
         return datetime.datetime.now()
 
-    line = raw_input('Insert time? [N/y]')
+    line = input('Insert time? [N/y]')
     if line != 'y':
         return datetime.datetime.now()
-    hour = raw_input('Hour: ')
-    minute = raw_input('Minutes: ')
+    hour = input('Hour: ')
+    minute = input('Minutes: ')
 
     now = datetime.datetime.now()
     r = now.replace(minute=int(minute), hour=int(hour))
@@ -92,9 +92,9 @@ def main():
 
     time = get_time(len(sys.argv) == 3)
 
-    print u'\t%s → %s\t Trips since: %s' % (orig.name, dest.name, str(time))
+    print('\t%s → %s\t Trips since: %s' % (orig.name, dest.name, str(time)))
     for i in vast.trip(originId=orig.id, destId=dest.id, datetime_obj=time):
-        print i.toTerm()
-        print "========================="
+        print(i.toTerm())
+        print("=========================")
 
 main()
