@@ -74,7 +74,7 @@ def gen_timetable_html(stops, datetime_obj):
     r = '<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body style="background-color:black; color:white;"><table>'
     r += '<tr><td></td><td>To</td><td>Track</td><td>Next</td></tr>'
     for i in stops:
-        r += i.toHtml(datetime_obj).encode('utf-8')
+        r += i.toHtml(datetime_obj)
     r += '</table></body></html>'
     return r
 
@@ -378,7 +378,7 @@ class Leg(object):
 
         bgcolor = int('0x' + self.fgcolor[1:], 16)
         fgcolor = int('0x' + self.bgcolor[1:], 16)
-        return colorize(name.encode('utf8'), fgcolor, bg=bgcolor).decode('utf8')
+        return colorize(name, fgcolor, bg=bgcolor)
 
     def __init__(self, d):
         self._repr = d
@@ -497,7 +497,7 @@ class BoardItem(object):
 
         bgcolor = int('0x' + self.fgcolor[1:], 16)
         fgcolor = int('0x' + self.bgcolor[1:], 16)
-        return colorize(name.encode('utf8'), fgcolor, bg=bgcolor).decode('utf8')
+        return colorize(name, fgcolor, bg=bgcolor)
 
     def __init__(self, d):
         self._repr = d
