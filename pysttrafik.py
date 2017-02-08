@@ -449,7 +449,7 @@ class BoardItem(object):
         return self.toTerm(servertime, color=false)
 
     def toHtml(self, servertime):
-        delta = [((i - servertime).seconds / 60) for i in self.datetime_obj]
+        delta = [((i - servertime).seconds // 60) for i in self.datetime_obj]
         delta.sort()
 
         name = self.getName()
@@ -470,7 +470,7 @@ class BoardItem(object):
         the time on the server, it will be used to show the difference in
         minutes before the arrival.
         '''
-        delta = [((i - servertime).seconds / 60) for i in self.datetime_obj]
+        delta = [((i - servertime).seconds // 60) for i in self.datetime_obj]
         delta.sort()
         bus = self.getName(color)
         return '%s %0*d -> %s # %s' % (bus, 2, delta[0], self.direction, ','.join(map(str, delta)))
