@@ -300,16 +300,10 @@ class LegHalf(object):
         self.date = d['date']
         self.id = d['id']
         self.name = d['name']
-        if 'routeIdx' in d:
-            self.routeIdx = d['routeIdx']
-        else:
-            self.routeIdx = None
+        self.routeIdx = d.get('routeIdx')
         self.time = d['time']
 
-        if 'track' in d:
-            self.track = d['track']
-        else:
-            self.track = None
+        self.track = d.get('track')
         self.type = d['type']
 
         if 'rtDate' in d:
@@ -384,10 +378,7 @@ class Leg(object):
         self._repr = d
         self.name = d['name']
         self.vehicle_type = d['type']
-        if 'id' in d:
-            self.id = d['id']
-        else:
-            self.id = None
+        self.id = d.get('id')
 
         self.origin = LegHalf(d['Origin'])
         self.destination = LegHalf(d['Destination'])
@@ -515,38 +506,24 @@ class BoardItem(object):
         # TODO self.journeydetail = d['journeyDetailRef']
 
         # optionals
-        self.track = None
-        self.rtdate = None
-        self.rttime = None
-        self.direction = None
-        self.stroke = None
-        self.bgcolor = '#0000ff'
-        self.fgcolor = '#ffffff'
         self.night = False
         self.booking = False
 
-        if 'track' in d:
-            self.track = d['track']
-        if 'rtDate' in d:
-            self.rtdate = d['rtDate']
-        if 'rtTime' in d:
-            self.rttime = d['rtTime']
+        self.track = d.get('track')
+        self.rtdate = d.get('rtDate')
+        self.rttime = d.get('rtTime')
         if 'rtTrack' in d:
             self.track = d['rtTrack']
         if 'night' in d:
             self.night = True
         # TODO booking
-        if 'direction' in d:
-            self.direction = d['direction']
+        self.direction = d.get('direction')
         self.wheelchair = 'accessibility' in d and d[
             'accessibility'] == 'wheelChair'
 
-        if 'bgColor' in d:
-            self.bgcolor = d['bgColor']
-        if 'stroke' in d:
-            self.stroke = d['stroke']
-        if 'fgColor' in d:
-            self.fgcolor = d['fgColor']
+        self.bgcolor = d.get('bgColor', '#0000ff')
+        self.stroke = d.get('stroke')
+        self.fgcolor = d.get('fgColor', '#ffffff')
 
         # Set the internal useful date representation
         if self.rtdate != None:
@@ -575,10 +552,7 @@ class Stop(object):
 
     def __init__(self, d):
         self.id = d['id']
-        if 'idx' in d:
-            self.idx = d['idx']
-        else:
-            self.idx = None
+        self.idx = d.get('idx')
         self.lat = d['lat']
         self.lon = d['lon']
         self.name = d['name']
