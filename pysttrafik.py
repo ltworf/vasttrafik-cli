@@ -384,15 +384,9 @@ class Leg(object):
         self.destination = LegHalf(d['Destination'])
 
         # optionals
-        self.direction = None
-        self.stroke = None
-        self.bgcolor = '#0000ff'
-        self.fgcolor = '#ffffff'
-        self.night = False
         self.booking = False
+        # TODO booking
 
-        self.wheelchair = 'accessibility' in d and d[
-            'accessibility'] == 'wheelChair'
 
         if 'track' in d:
             self.track = d['track']
@@ -402,18 +396,12 @@ class Leg(object):
             self.rttime = d['rtTime']
         if 'rtTrack' in d:
             self.track = d['rtTrack']
-        if 'night' in d:
-            self.night = True
-        # TODO booking
-        if 'direction' in d:
-            self.direction = d['direction']
-
-        if 'bgColor' in d:
-            self.bgcolor = d['bgColor']
-        if 'stroke' in d:
-            self.stroke = d['stroke']
-        if 'fgColor' in d:
-            self.fgcolor = d['fgColor']
+        self.night = 'night' in d
+        self.wheelchair = d.get('accessibility') == 'wheelChair'
+        self.direction = d.get('direction')
+        self.bgcolor = d.get('bgColor', '#0000ff')
+        self.fgcolor = d.get('fgColor', '#ffffff')
+        self.stroke = d.get('stroke')
 
 
 class BoardItem(object):
@@ -518,8 +506,7 @@ class BoardItem(object):
             self.night = True
         # TODO booking
         self.direction = d.get('direction')
-        self.wheelchair = 'accessibility' in d and d[
-            'accessibility'] == 'wheelChair'
+        self.wheelchair = d.get('accessibility') == 'wheelChair'
 
         self.bgcolor = d.get('bgColor', '#0000ff')
         self.stroke = d.get('stroke')
