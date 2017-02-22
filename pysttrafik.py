@@ -492,16 +492,14 @@ class BoardItem(object):
         # TODO self.journeydetail = d['journeyDetailRef']
 
         # optionals
-        self.night = False
         self.booking = False
+        self.night = 'night' in d
 
         self.track = d.get('track')
         self.rtdate = d.get('rtDate')
         self.rttime = d.get('rtTime')
         if 'rtTrack' in d:
             self.track = d['rtTrack']
-        if 'night' in d:
-            self.night = True
         # TODO booking
         self.direction = d.get('direction')
         self.wheelchair = d.get('accessibility') == 'wheelChair'
