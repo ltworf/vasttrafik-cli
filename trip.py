@@ -111,4 +111,5 @@ def main():
         print(i.toTerm())
         print("=========================")
 
-main()
+if __name__ == '__main__':
+    main()
