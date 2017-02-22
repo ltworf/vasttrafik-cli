@@ -542,17 +542,14 @@ class Stop(object):
         self.lon = d['lon']
         self.name = d['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def __repr__(self):
         d = {'id': self.id, 'idx': self.idx, 'lat':
              self.lat, 'lon': self.lon, 'name': self.name}
-
-        return d.__repr__()
+        return '%s(%s)' % (self.__class__.__name__, repr(d))
 
     def __eq__(self, o):
         '''Compares using the id field'''
-        if not isinstance(o, Stop):
-            return False
-        return self.id == o.id
+        return isinstance(o, Stop) and self.id == o.id
