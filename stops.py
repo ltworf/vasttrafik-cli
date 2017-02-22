@@ -36,8 +36,7 @@ readline.parse_and_bind('tab: complete')
 readline.parse_and_bind('set editing-mode emacs')
 readline.set_completer_delims(" ")
 
-while True:
-
+def main():
     preset = sys.argv[1] if len(sys.argv) == 2 else ''
     stop = trip.get_stop('> ', preset)
     try:
@@ -57,3 +56,6 @@ while True:
             print("   == Track %s ==" % i.track)
         prev_track = i.track
         print(i.toTerm(vast.datetime_obj))
+
+if __name__ == '__main__':
+    main()
