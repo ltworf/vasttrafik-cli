@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# coding=UTF-8
 # pysttrafik
 # Copyright (C) 2012-2017 Salvo "LtWorf" Tomaselli
 #
