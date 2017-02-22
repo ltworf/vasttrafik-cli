@@ -19,10 +19,10 @@
 #
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
-from pysttrafik import Vasttrafik, gen_timetable_html, get_key
-import readline
 import sys
 import datetime
+
+from pysttrafik import Vasttrafik, gen_timetable_html, get_key
 
 key = get_key()
 if key == None:
@@ -30,11 +30,6 @@ if key == None:
     sys.exit(1)
 
 vast = Vasttrafik(key)
-
-readline.parse_and_bind('tab: complete')
-readline.parse_and_bind('set editing-mode emacs')
-readline.set_completer_delims(" ")
-
 
 def get_stop(prompt, preset=None):
     if preset:

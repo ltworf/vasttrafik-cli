@@ -19,7 +19,6 @@
 #
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
-import readline
 import sys
 
 from pysttrafik import Vasttrafik, gen_timetable_html, get_key
@@ -31,10 +30,6 @@ if key == None:
     sys.exit(1)
 
 vast = Vasttrafik(key)
-
-readline.parse_and_bind('tab: complete')
-readline.parse_and_bind('set editing-mode emacs')
-readline.set_completer_delims(" ")
 
 def main():
     preset = sys.argv[1] if len(sys.argv) == 2 else ''
