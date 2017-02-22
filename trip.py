@@ -37,13 +37,15 @@ readline.set_completer_delims(" ")
 
 
 def get_stop(prompt, preset=None):
-
     if preset:
         return vast.location(preset)[0]
 
     while True:
-        line = input(prompt)
-        if len(line) == 0:
+        try:
+            line = input(prompt)
+        except (KeyboardInterrupt, EOFError):
+            sys.exit(0)
+        if not line:
             return None
 
         stops = vast.location(line)
@@ -54,7 +56,10 @@ def get_stop(prompt, preset=None):
                 break
 
         while True:
-            line = input('> ')
+            try:
+                line = input('> ')
+            except (KeyboardInterrupt, EOFError):
+                sys.exit(0)
             try:
                 return stops[int(line)]
             except:
@@ -65,11 +70,20 @@ def get_time(default):
     if default:
         return datetime.datetime.now()
 
-    line = input('Insert time? [N/y]')
+    try:
+        line = input('Insert time? [N/y]')
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except EOFError:
+        line = ''
     if line != 'y':
         return datetime.datetime.now()
-    hour = input('Hour: ')
-    minute = input('Minutes: ')
+
+    try:
+        hour = input('Hour: ')
+        minute = input('Minutes: ')
+    except (KeyboardInterrupt, EOFError):
+        sys.exit(0)
 
     now = datetime.datetime.now()
     r = now.replace(minute=int(minute), hour=int(hour))
