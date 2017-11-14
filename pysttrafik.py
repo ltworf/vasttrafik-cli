@@ -109,7 +109,7 @@ def to_datetime(date, time):
 
 class Vasttrafik:
 
-    def __init__(self, key, api="api.vasttrafik.se/bin/rest.exe/v1"):
+    def __init__(self, key, api="api.vasttrafik.se/bin/rest.exe/v2"):
         '''
         key is the API key that must be sent on every request to obtain a reply.
         you can obtain one at api.vasttrafik.se, but it will be activated the
@@ -120,10 +120,12 @@ class Vasttrafik:
         self.datetime_obj = None
 
     def request(self, service, param):
-        url = "http://%s/%s?format=json&authKey=%s&%s" % (
-            self.api, service, self.key, param)
+        token = _get_token(self.key)
 
+        url = "https://%s/%s?format=json&%s" % (
+            self.api, service, param)
         req = urllib.request.Request(url)
+        req.headers['Authorization'] = 'Bearer ' + token
         f = urllib.request.urlopen(req)
 
         r = b''
