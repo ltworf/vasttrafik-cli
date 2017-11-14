@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=PyVästtrafik
-GenericName=Travel planner
-Exec=/opt/extras.ubuntu.com/pyvasttrafik/bin/pyvasttrafik
-Icon=/opt/extras.ubuntu.com/pyvasttrafik/icons/128.png
-Terminal=0
-Type=Application
-Categories=Office;

@@ -1,2 +1,0 @@
-#!/bin/sh
-python /opt/extras.ubuntu.com/pyvasttrafik/lib/python2.7/dist-packages/main.py || python /opt/extras.ubuntu.com/pyvasttrafik/lib/python2.6/dist-packages/main.py
