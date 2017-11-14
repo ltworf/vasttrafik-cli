@@ -32,6 +32,20 @@ try:
 except:
     colorize = lambda x, rgb=None, ansi=None, bg=None, ansi_bg=None, fd=1: x
 
+def _get_token(key: str) -> str:
+    url = "https://api.vasttrafik.se:443/token"
+    req = urllib.request.Request(url)
+    req.data = b'grant_type=client_credentials'
+    req.headers['Authorization'] = 'Basic ' + key
+    r = b''
+    with urllib.request.urlopen(req) as f:
+        while True:
+            l = f.read()
+            if len(l) == 0:
+                break
+            r += l
+    answer = r.decode('ascii')
+    return json.loads(answer)['access_token']
 
 def get_key():
     '''
