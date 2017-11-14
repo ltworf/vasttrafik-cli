@@ -119,7 +119,7 @@ class Vasttrafik:
         self.api = api
         self.datetime_obj = None
 
-    def request(self, service, param):
+    def _request(self, service, param):
         token = _get_token(self.key)
 
         url = "https://%s/%s?format=json&%s" % (
@@ -137,14 +137,13 @@ class Vasttrafik:
         if r.strip().startswith(b'Invalid authKey'):
             raise Exception('Invalid authKey')
 
-        return r.decode('utf8')
+        return json.loads(r.decode('utf8'))
 
     def location(self, user_input):
         '''Returns a list of Stop objects, completing from the user input'''
-        a = self.request(
+        a = self._request(
             "location.name", urllib.parse.urlencode({'input': user_input}))
-        b = json.loads(a)
-        c = b["LocationList"]['StopLocation']
+        c = a["LocationList"]['StopLocation']
 
         if isinstance(c, dict):
             c = [c]
@@ -165,7 +164,7 @@ class Vasttrafik:
         if dist != None:
             params += '&maxDist=%d' % dist
 
-        b = json.loads(self.request('location.nearbystops', params))
+        b = self._request('location.nearbystops', params)
         c = b["LocationList"]['StopLocation']
 
         return [Stop(i) for i in c]
@@ -193,7 +192,7 @@ class Vasttrafik:
             params['time'] = '%02d:%02d' % (
                 datetime_obj.hour, datetime_obj.minute)
 
-        b = json.loads(self.request(service, urllib.parse.urlencode(params)))
+        b = self._request(service, urllib.parse.urlencode(params))
         if arrival:
             c = b['ArrivalBoard']['Arrival']
             self.datetime_obj = to_datetime(
@@ -267,8 +266,7 @@ class Vasttrafik:
                 datetime_obj.hour, datetime_obj.minute)
 
         # Request
-        b = json.loads(self.request(service, urllib.parse.urlencode(params)))
-
+        b = self._request(service, urllib.parse.urlencode(params))
         c = b['TripList']
 
         self.datetime_obj = to_datetime(c['serverdate'], c['servertime'])
