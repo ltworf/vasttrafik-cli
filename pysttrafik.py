@@ -126,16 +126,13 @@ class Vasttrafik:
             self.api, service, param)
         req = urllib.request.Request(url)
         req.headers['Authorization'] = 'Bearer ' + token
-        f = urllib.request.urlopen(req)
-
         r = b''
-
-        while True:
-            l = f.read()
-            if len(l) == 0:
-                break
-            r += l
-        f.close()
+        with urllib.request.urlopen(req) as f:
+            while True:
+                l = f.read()
+                if len(l) == 0:
+                    break
+                r += l
 
         if r.strip().startswith(b'Invalid authKey'):
             raise Exception('Invalid authKey')
