@@ -38,9 +38,6 @@ def main():
         print("Error")
         sys.exit(1)
 
-    f = open('/tmp/t.html', 'w')
-    f.write(gen_timetable_html(trams, vast.datetime_obj))
-    f.close()
     print("\n\n\n\n\n\n\n\n\n")
     print("\t\t%s, Time: %s\n" % (stop.name, vast.datetime_obj))
     prev_track = None
