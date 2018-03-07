@@ -10,3 +10,4 @@ HAFAS ReST Interface VT 1_07.pdf
 gui.py
 selgui.py
 pysttrafik.kdev4
+.mypy_cache/
