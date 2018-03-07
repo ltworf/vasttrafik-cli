@@ -19,18 +19,15 @@
 import urllib.request
 import urllib.parse
 import datetime
+import json
 import re
-
-try:
-    import json
-except:
-    import simplejson
-    json = simplejson.simplejson()
+from typing import Dict, List, Optional
 
 try:
     from xtermcolor import colorize
 except:
     colorize = lambda x, rgb=None, ansi=None, bg=None, ansi_bg=None, fd=1: x
+
 
 def _get_token(key: str) -> str:
     url = "https://api.vasttrafik.se:443/token"
