@@ -44,7 +44,8 @@ def _get_token(key: str) -> str:
     answer = r.decode('ascii')
     return json.loads(answer)['access_token']
 
-def get_key():
+
+def get_key() -> Optional[str]:
     '''
     This function tries to load the API key from some configuration files.
     It will try, in the order:
@@ -75,7 +76,7 @@ def get_key():
         return None
 
 
-def gen_timetable_html(stops, datetime_obj):
+def gen_timetable_html(stops, datetime_obj) -> str:
     '''generates the HTML to a timetable
     takes the tram list (resulting from a call to board)
     and the time from the server'''
@@ -106,7 +107,7 @@ def to_datetime(date, time):
 
 class Vasttrafik:
 
-    def __init__(self, key, api="api.vasttrafik.se/bin/rest.exe/v2"):
+    def __init__(self, key: str, api: str = "api.vasttrafik.se/bin/rest.exe/v2") -> None:
         '''
         key is the API key that must be sent on every request to obtain a reply.
         you can obtain one at api.vasttrafik.se, but it will be activated the
@@ -146,7 +147,7 @@ class Vasttrafik:
             c = [c]
         return [Stop(i) for i in c]
 
-    def nearby(self, lat, lon, stops=10, dist=None):
+    def nearby(self, lat: float, lon: float, stops: int = 10, dist: Optional[int] = None) -> List['Stop']:
         '''
         Returns the list of stops close to a certain location
 
@@ -166,7 +167,7 @@ class Vasttrafik:
 
         return [Stop(i) for i in c]
 
-    def board(self, id, direction=None, arrival=False, time_span=None, departures=2, datetime_obj=None):
+    def board(self, id, direction=None, arrival=False, time_span=None, departures=2, datetime_obj=None) -> List['BoardItem']:
         '''Returns an arrival/departure board for a given station'''
 
         if arrival:
@@ -219,7 +220,7 @@ class Vasttrafik:
         trams.sort(key=lambda x: (x.track, x.datetime_obj[0]))
         return trams
 
-    def trip(self, originCoord=None, originId=None, originCoordName=None, destCoord=None, destId=None, destCoordName=None, viaId=None, datetime_obj=None):
+    def trip(self, originCoord=None, originId=None, originCoordName=None, destCoord=None, destId=None, destCoordName=None, viaId=None, datetime_obj=None) -> List['Trip']:
         '''
         originCoord = a tuple with origin coordinates (lat,lon)
         originId = stop id
@@ -282,7 +283,7 @@ class Trip(object):
     a Leg of vehicle_type WALK will be between the other two Legs.
     '''
 
-    def __init__(self, d):
+    def __init__(self, d) -> None:
         d = d['Leg']
         if isinstance(d, list):
             self.legs = [Leg(i) for i in d]
@@ -415,7 +416,7 @@ class BoardItem(object):
     '''This represents one item of the panel at a stop
     has a bunch of attributes to represent the stop'''
 
-    def join(self, o):
+    def join(self, o: 'BoardItem') -> bool:
         '''Joins another stop into this one if possible
         Basically if there are 2 trams going at different times
         they will be collapsed into a single one.
@@ -484,7 +485,7 @@ class BoardItem(object):
         fgcolor = int('0x' + self.bgcolor[1:], 16)
         return colorize(name, fgcolor, bg=bgcolor)
 
-    def __init__(self, d):
+    def __init__(self, d) -> None:
         self._repr = d
         if not isinstance(d, dict):
             raise Exception("Invalid data")
