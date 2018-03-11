@@ -306,11 +306,9 @@ class Trip(object):
 
     def __init__(self, d) -> None:
         d = d['Leg']
-        if isinstance(d, list):
-            self.legs = [Leg(i) for i in d]
-        else:
-            self.legs = [Leg(d)]
-        pass
+        if not isinstance(d, list):
+            d = [d]
+        self.legs = convert(d, Legs)
 
     def toTerm(self):
         return self.toTxt(True)
@@ -340,11 +338,32 @@ class LegHalf(NamedTuple):
         return to_datetime(d, t)
 
 
-class Leg(object):
+class Leg(NamedTuple):
 
     '''
     a Leg is part of a Trip, and is performed on one vehicle or by foot.
     '''
+
+    name: str
+    type: str  #TODO use ENUM
+    id: str
+    Origin: LegHalf
+    Destination: LegHalf
+    # TODO booking
+    accessibility: str = ''
+    track: Optional[str] = None
+    rtDate: Optional[str] = None
+    rtTime: Optional[str] = None
+    rtTrack: Optional[str] = None
+    direction: Optional[str] = None
+    stroke: Optional[str] = None
+    bgColor: Optional[str] = '#0000ff'
+    fgColor: Optional[str] = '#ffffff'
+    night: bool = False
+
+    @property
+    def wheelchair(self) -> bool:
+        return self.accessibility == 'wheelChair'
 
     def toTerm(self):
         '''
@@ -360,15 +379,15 @@ class Leg(object):
         return '%s %0*d:%0*d\t%0*d:%0*d\t%s -> %s ' % (
             self.getName(color),
             2,
-            self.origin.datetime_obj.hour,
+            self.Origin.datetime_obj.hour,
             2,
-            self.origin.datetime_obj.minute,
+            self.Origin.datetime_obj.minute,
             2,
-            self.destination.datetime_obj.hour,
+            self.Destination.datetime_obj.hour,
             2,
-            self.destination.datetime_obj.minute,
-            self.origin.name,
-            self.destination.name
+            self.Destination.datetime_obj.minute,
+            self.Origin.name,
+            self.Destination.name
         )
 
     def getName(self, color=False):
@@ -394,38 +413,12 @@ class Leg(object):
         if not color:
             return name
 
-        bgcolor = int('0x' + self.fgcolor[1:], 16)
-        fgcolor = int('0x' + self.bgcolor[1:], 16)
+        bgcolor = int('0x' + self.fgColor[1:], 16)
+        fgcolor = int('0x' + self.bgColor[1:], 16)
         return colorize(name, fgcolor, bg=bgcolor)
 
-    def __init__(self, d):
-        self._repr = d
-        self.name = d['name']
-        self.vehicle_type = d['type']
-        self.id = d.get('id')
 
-        self.origin = convert(d['Origin'], LegHalf)
-        self.destination = convert(d['Destination'], LegHalf)
-
-        # optionals
-        self.booking = False
-        # TODO booking
-
-
-        if 'track' in d:
-            self.track = d['track']
-        if 'rtDate' in d:
-            self.rtdate = d['rtDate']
-        if 'rtTime' in d:
-            self.rttime = d['rtTime']
-        if 'rtTrack' in d:
-            self.track = d['rtTrack']
-        self.night = 'night' in d
-        self.wheelchair = d.get('accessibility') == 'wheelChair'
-        self.direction = d.get('direction')
-        self.bgcolor = d.get('bgColor', '#0000ff')
-        self.fgcolor = d.get('fgColor', '#ffffff')
-        self.stroke = d.get('stroke')
+Legs = List[Leg]
 
 
 class BoardItem(object):
