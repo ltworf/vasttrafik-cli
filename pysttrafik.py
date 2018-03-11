@@ -345,19 +345,19 @@ class Leg(NamedTuple):
     '''
 
     name: str
-    sname: str
     type: str  #TODO use ENUM
-    id: str
     Origin: LegHalf
     Destination: LegHalf
     # TODO booking
     accessibility: str = ''
+    sname: Optional[str] = None
     track: Optional[str] = None
     rtDate: Optional[str] = None
     rtTime: Optional[str] = None
     rtTrack: Optional[str] = None
     direction: Optional[str] = None
     stroke: Optional[str] = None
+    id: Optional[str] = None
     bgColor: str = '#0000ff'
     fgColor: str = '#ffffff'
     night: bool = False
@@ -395,7 +395,10 @@ class Leg(NamedTuple):
         '''Returns a nice version of the name
         If color is true, then 256-color escapes will be
         added to give the name the color of the line'''
-        name = self.sname + ' '
+        if self.sname:
+            name = self.sname + ' '
+        else:
+            name = self.name + ' '
 
         if self.direction is not None:
             name += self.direction + ' '
