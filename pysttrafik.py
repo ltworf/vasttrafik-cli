@@ -358,8 +358,8 @@ class Leg(NamedTuple):
     rtTrack: Optional[str] = None
     direction: Optional[str] = None
     stroke: Optional[str] = None
-    bgColor: Optional[str] = '#0000ff'
-    fgColor: Optional[str] = '#ffffff'
+    bgColor: str = '#0000ff'
+    fgColor: str = '#ffffff'
     night: bool = False
 
     @property
