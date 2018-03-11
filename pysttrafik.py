@@ -23,7 +23,7 @@ import json
 import re
 from typing import Dict, List, Optional, NamedTuple, Union
 
-from ntupledict import from_dict, convert
+from typedload import load
 
 try:
     from xtermcolor import colorize
@@ -166,7 +166,7 @@ class Vasttrafik:
 
         if isinstance(c, dict):
             c = [c]
-        return convert(c, Stops)
+        return load(c, Stops)
 
     def nearby(self, lat: float, lon: float, stops: int = 10, dist: Optional[int] = None) -> Stops:
         '''
@@ -186,7 +186,7 @@ class Vasttrafik:
         b = self._request('location.nearbystops', params)
         c = b["LocationList"]['StopLocation']
 
-        return convert(c, Stops)
+        return load(c, Stops)
 
     def board(self, id, direction=None, arrival=False, time_span=None, departures=2, datetime_obj=None) -> List['BoardItem']:
         '''Returns an arrival/departure board for a given station'''
@@ -290,7 +290,7 @@ class Vasttrafik:
 
         self.datetime_obj = to_datetime(c['serverdate'], c['servertime'])
 
-        return convert(c['Trip'], Trips)
+        return load(c['Trip'], Trips)
 
 
 class LegHalf(NamedTuple):
