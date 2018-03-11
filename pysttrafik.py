@@ -322,32 +322,28 @@ class Trip(object):
         return r[:-1]
 
 
-class LegHalf(object):
+class LegHalf(NamedTuple):
+    date: str
+    id: str
+    name: str
+    time: str
+    track: str
+    type: str
+    routeIdx: Optional[str] = None
+    rtDate: Optional[str] = None
+    rtTime: Optional[str] = None
 
-    def __init__(self, d):
-        self.date = d['date']
-        self.id = d['id']
-        self.name = d['name']
-        self.routeIdx = d.get('routeIdx')
-        self.time = d['time']
-
-        self.track = d.get('track')
-        self.type = d['type']
-
-        if 'rtDate' in d:
-            self.date = d['rtDate']
-        if 'rtTime' in d:
-            self.time = d['rtTime']
-
-        self.datetime_obj = to_datetime(self.date, self.time)
+    @property
+    def datetime_obj(self):
+        d = self.rtDate if self.rtDate else self.date
+        t = self.rtTime if self.rtTime else self.time
+        return to_datetime(d, t)
 
 
 class Leg(object):
 
     '''
     a Leg is part of a Trip, and is performed on one vehicle or by foot.
-
-    it has an origin and a destination of type LegHalf
     '''
 
     def toTerm(self):
@@ -408,8 +404,8 @@ class Leg(object):
         self.vehicle_type = d['type']
         self.id = d.get('id')
 
-        self.origin = LegHalf(d['Origin'])
-        self.destination = LegHalf(d['Destination'])
+        self.origin = convert(d['Origin'], LegHalf)
+        self.destination = convert(d['Destination'], LegHalf)
 
         # optionals
         self.booking = False
