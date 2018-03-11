@@ -345,6 +345,7 @@ class Leg(NamedTuple):
     '''
 
     name: str
+    sname: str
     type: str  #TODO use ENUM
     id: str
     Origin: LegHalf
@@ -394,21 +395,20 @@ class Leg(NamedTuple):
         '''Returns a nice version of the name
         If color is true, then 256-color escapes will be
         added to give the name the color of the line'''
-        name = self.name
-        name = name.replace(u'Spårvagn', '')
-        name = name.replace(u'Buss', '')
-        name += " "
+        name = self.sname + ' '
 
-        if self.direction != None:
-            name += self.direction + " "
+        if self.direction is not None:
+            name += self.direction + ' '
 
         if self.wheelchair:
-            name += u"♿ "
+            name += '♿ '
         if self.night:
-            name += u"☾ "
+            name += '☾ '
 
-        while len(name) < 20:
-            name = " " + name
+        if len(name) > 30:
+            name = name[:30]
+        while len(name) < 30:
+            name = ' ' + name
 
         if not color:
             return name
