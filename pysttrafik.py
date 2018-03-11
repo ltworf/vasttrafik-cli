@@ -21,7 +21,7 @@ import urllib.parse
 import datetime
 import json
 import re
-from typing import Dict, List, Optional, NamedTuple
+from typing import Dict, List, Optional, NamedTuple, Union
 
 from ntupledict import from_dict, convert
 
@@ -241,7 +241,7 @@ class Vasttrafik:
         trams.sort(key=lambda x: (x.track, x.datetime_obj[0]))
         return trams
 
-    def trip(self, originCoord=None, originId=None, originCoordName=None, destCoord=None, destId=None, destCoordName=None, viaId=None, datetime_obj=None) -> List['Trip']:
+    def trip(self, originCoord=None, originId=None, originCoordName=None, destCoord=None, destId=None, destCoordName=None, viaId=None, datetime_obj=None) -> 'Trips':
         '''
         originCoord = a tuple with origin coordinates (lat,lon)
         originId = stop id
@@ -290,34 +290,7 @@ class Vasttrafik:
 
         self.datetime_obj = to_datetime(c['serverdate'], c['servertime'])
 
-        return [Trip(i) for i in c['Trip']]
-
-
-class Trip(object):
-
-    '''
-    A trip contains a list of Legs (attribute legs).
-    If the stops are directly connected the list will only
-    have 1 element.
-
-    If on a change the traveler must go from one Track to another,
-    a Leg of vehicle_type WALK will be between the other two Legs.
-    '''
-
-    def __init__(self, d) -> None:
-        d = d['Leg']
-        if not isinstance(d, list):
-            d = [d]
-        self.legs = convert(d, Legs)
-
-    def toTerm(self):
-        return self.toTxt(True)
-
-    def toTxt(self, color=False):
-        r = ''
-        for i in self.legs:
-            r += i.toTxt(color) + '\n'
-        return r[:-1]
+        return convert(c['Trip'], Trips)
 
 
 class LegHalf(NamedTuple):
@@ -422,6 +395,37 @@ class Leg(NamedTuple):
 
 
 Legs = List[Leg]
+
+
+class Trip(NamedTuple):
+
+    '''
+    A trip contains a list of Legs (attribute legs).
+    If the stops are directly connected the list will only
+    have 1 element.
+
+    If on a change the traveler must go from one Track to another,
+    a Leg of vehicle_type WALK will be between the other two Legs.
+    '''
+    Leg: Union[Leg,Legs]
+
+    @property
+    def legs(self) -> Legs:
+        if isinstance(self.Leg, Leg):
+            return [self.Leg]
+        return self.Leg
+
+    def toTerm(self):
+        return self.toTxt(True)
+
+    def toTxt(self, color=False):
+        r = ''
+        for i in self.legs:
+            r += i.toTxt(color) + '\n'
+        return r[:-1]
+
+
+Trips = List[Trip]
 
 
 class BoardItem(object):
