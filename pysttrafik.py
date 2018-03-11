@@ -21,12 +21,33 @@ import urllib.parse
 import datetime
 import json
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, NamedTuple
+
+from ntupledict import from_dict, convert
 
 try:
     from xtermcolor import colorize
 except:
     colorize = lambda x, rgb=None, ansi=None, bg=None, ansi_bg=None, fd=1: x
+
+
+class Stop(NamedTuple):
+
+    '''
+    The object represents a stop
+    '''
+
+    id: str
+    lon: float
+    lat: float
+    name: str
+    idx: Optional[str] = None
+
+    def __str__(self):
+        return self.name
+
+
+Stops = List[Stop]
 
 
 def _get_token(key: str) -> str:
@@ -137,7 +158,7 @@ class Vasttrafik:
 
         return json.loads(r.decode('utf8'))
 
-    def location(self, user_input):
+    def location(self, user_input) -> Stops:
         '''Returns a list of Stop objects, completing from the user input'''
         a = self._request(
             "location.name", urllib.parse.urlencode({'input': user_input}))
@@ -145,9 +166,9 @@ class Vasttrafik:
 
         if isinstance(c, dict):
             c = [c]
-        return [Stop(i) for i in c]
+        return convert(c, Stops)
 
-    def nearby(self, lat: float, lon: float, stops: int = 10, dist: Optional[int] = None) -> List['Stop']:
+    def nearby(self, lat: float, lon: float, stops: int = 10, dist: Optional[int] = None) -> Stops:
         '''
         Returns the list of stops close to a certain location
 
@@ -165,7 +186,7 @@ class Vasttrafik:
         b = self._request('location.nearbystops', params)
         c = b["LocationList"]['StopLocation']
 
-        return [Stop(i) for i in c]
+        return convert(c, Stops)
 
     def board(self, id, direction=None, arrival=False, time_span=None, departures=2, datetime_obj=None) -> List['BoardItem']:
         '''Returns an arrival/departure board for a given station'''
@@ -533,35 +554,3 @@ class BoardItem(object):
             time = self.time
 
         self.datetime_obj = [to_datetime(date, time), ]
-
-
-class Stop(object):
-
-    '''The object represents a stop
-
-    it has attributes:
-    id
-    idx //might be None
-    lon
-    lat
-    name
-    '''
-
-    def __init__(self, d):
-        self.id = d['id']
-        self.idx = d.get('idx')
-        self.lat = d['lat']
-        self.lon = d['lon']
-        self.name = d['name']
-
-    def __str__(self):
-        return self.name
-
-    def __repr__(self):
-        d = {'id': self.id, 'idx': self.idx, 'lat':
-             self.lat, 'lon': self.lon, 'name': self.name}
-        return '%s(%s)' % (self.__class__.__name__, repr(d))
-
-    def __eq__(self, o):
-        '''Compares using the id field'''
-        return isinstance(o, Stop) and self.id == o.id
