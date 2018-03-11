@@ -110,7 +110,7 @@ def gen_timetable_html(stops, datetime_obj) -> str:
     return r
 
 
-def to_datetime(date, time):
+def to_datetime(date: str, time: str) -> datetime.datetime:
     '''Converts two string date and time into a datetime object
 
     date format YYYY-MM-DD
