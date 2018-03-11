@@ -501,6 +501,7 @@ class BoardItem(object):
         self.journeyid = d['journeyid']
         self.date = d['date']
         self.time = d['time']
+        self.sname = d.get('sname', '')
 
         # TODO self.journeydetail = d['journeyDetailRef']
 
