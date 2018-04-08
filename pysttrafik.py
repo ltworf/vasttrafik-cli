@@ -1,5 +1,5 @@
 # pysttrafik
-# Copyright (C) 2012-2017 Salvo "LtWorf" Tomaselli
+# Copyright (C) 2012-2018 Salvo "LtWorf" Tomaselli
 #
 # pysttrafik is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
