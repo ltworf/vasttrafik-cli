@@ -312,12 +312,23 @@ class LegHalf(NamedTuple):
         return to_datetime(d, t)
 
 
-class LegType(Enum):
+class VehicleType(Enum):
     ST = 'ST'
     TRAM = 'TRAM'
     BUS = 'BUS'
     WALK = 'WALK'
     BOAT = 'BOAT'
+
+    @property
+    def symbol(self) -> str:
+        s = {
+            self.TRAM: '🚋',
+            self.BUS: '🚌',
+            self.WALK: '🚶',
+            self.BOAT: '⛴',
+            self.ST: ' '
+        }
+        return s[self]
 
 
 class Leg(NamedTuple):
@@ -327,7 +338,7 @@ class Leg(NamedTuple):
     '''
 
     name: str
-    type: LegType
+    type: VehicleType
     Origin: LegHalf
     Destination: LegHalf
     # TODO booking
@@ -385,14 +396,17 @@ class Leg(NamedTuple):
         if self.direction is not None:
             name += self.direction + ' '
 
+        if len(name) > 29:
+            name = name[:29] + ' '
+
         if self.wheelchair:
             name += '♿ '
         if self.night:
             name += '☾ '
 
-        if len(name) > 30:
-            name = name[:30]
-        while len(name) < 30:
+        name += self.type.symbol
+
+        while len(name) < 33:
             name = ' ' + name
 
         if not color:
