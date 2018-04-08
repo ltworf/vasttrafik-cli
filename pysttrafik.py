@@ -19,6 +19,7 @@
 import urllib.request
 import urllib.parse
 import datetime
+from enum import Enum
 import json
 import re
 from typing import Dict, List, Optional, NamedTuple, Union
@@ -311,6 +312,14 @@ class LegHalf(NamedTuple):
         return to_datetime(d, t)
 
 
+class LegType(Enum):
+    ST = 'ST'
+    TRAM = 'TRAM'
+    BUS = 'BUS'
+    WALK = 'WALK'
+    BOAT = 'BOAT'
+
+
 class Leg(NamedTuple):
 
     '''
@@ -318,7 +327,7 @@ class Leg(NamedTuple):
     '''
 
     name: str
-    type: str  #TODO use ENUM
+    type: LegType
     Origin: LegHalf
     Destination: LegHalf
     # TODO booking
