@@ -419,10 +419,9 @@ class Trip(NamedTuple):
         return self.toTxt(True)
 
     def toTxt(self, color=False):
-        r = ''
-        for i in self.legs:
-            r += i.toTxt(color) + '\n'
-        return r[:-1]
+        if self.legs:
+            return '\n'.join(i.toTxt(color) for i in self.legs)
+        return ''
 
 
 Trips = List[Trip]
