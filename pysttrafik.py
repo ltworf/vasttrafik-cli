@@ -298,8 +298,8 @@ class LegHalf(NamedTuple):
     id: str
     name: str
     time: str
-    track: str
     type: str
+    track: str = ''
     routeIdx: Optional[str] = None
     rtDate: Optional[str] = None
     rtTime: Optional[str] = None
