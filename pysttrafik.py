@@ -22,6 +22,7 @@ import datetime
 from enum import Enum
 import json
 import re
+from time import monotonic
 from typing import Dict, List, Optional, NamedTuple, Union
 
 from typedload import load
@@ -51,14 +52,22 @@ class Stop(NamedTuple):
 Stops = List[Stop]
 
 
+class Token(NamedTuple):
+    expires_in: int
+    access_token: str
+
 def _get_token(key: str) -> str:
+    if hasattr(_get_token, 'token') and monotonic() < _get_token.obtained + _get_token.token.expires_in:
+            return _get_token.token.access_token
     url = "https://api.vasttrafik.se:443/token"
     req = urllib.request.Request(url)
     req.data = b'grant_type=client_credentials'
     req.headers['Authorization'] = 'Basic ' + key
     with urllib.request.urlopen(req) as f:
-        answer = json.load(f)
-    return answer['access_token']
+        token = load(json.load(f), Token)
+    _get_token.token = token
+    _get_token.obtained = monotonic()
+    return token.access_token
 
 
 def get_key() -> Optional[str]:
