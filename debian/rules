@@ -1,13 +1,4 @@
 #!/usr/bin/make -f
 
-PKGDIR=/opt/extras.ubuntu.com/pyvasttrafik/
-
 %:
-	dh $@
-
-clean:
-	rm -rf build *.egg-info
-	dh $@
-override_dh_auto_clean:
-override_dh_auto_install:
-	dh_auto_install -- --prefix=/opt/extras.ubuntu.com/pyvasttrafik/
+	dh $@ --with python3
