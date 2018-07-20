@@ -1,5 +1,5 @@
-pysttrafik (1.0-1) UNRELEASED; urgency=low
+pysttrafik (1.0-1) unstable; urgency=low
 
-  * New upstream release
+  * Initial release. (Closes: #904135)
 
  -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Fri, 20 Jul 2018 10:43:25 +0200

@@ -1,0 +1,27 @@
+.TH trip 1 "Jul 20, 2018" "Query Västtrafik to show how to get somewhere"
+.SH NAME
+trip
+\- Query Västtrafik to show how to get somewhere
+
+.SH SYNOPSIS
+trip
+.br
+trip SOURCE_STOP DESTINATION_STOP
+
+.SH DESCRIPTION
+This command queries the online API provided by Västtrafik to indicate how to reach a certain destination.
+.br
+The easier way to use it is to write the names of the source and destination stops as parameters.
+.br
+Alternatively, calling it without parameters will make it use an interactive mode, which can be used to show
+suggestions for the names, and insert a precise departure time.
+.SH "EXAMPLE"
+trip brunnspar stigbergs
+.SH "SEE ALSO"
+.BR stops(1)
+.SH WEB
+.BR https://github.com/ltworf/pysttrafik
+
+.SH AUTHOR
+.nf
+Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>

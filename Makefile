@@ -34,11 +34,14 @@ install:
 	install -m644 -D conf/pysttrafik.conf $${DESTDIR:-/}/etc/pysttrafik.conf
 	#Install other files
 	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik/README.md
+	install -m644 -D man/stops.1 $${DESTDIR:-/}/usr/share/man/man1/stops.1
+	install -m644 -D man/trip.1 $${DESTDIR:-/}/usr/share/man/man1/trip.1
 
 .PHONY: clean
 clean:
 	$(RM) -r deb-pkg
 	$(RM) -r __pycache__
+	$(RM) -r *~
 
 .PHONY: dist
 dist: clean
@@ -47,6 +50,7 @@ dist: clean
 		pysttrafik/CHANGELOG \
 		pysttrafik/COPYING \
 		pysttrafik/Makefile \
+		pysttrafik/man \
 		pysttrafik/pysttrafik.py \
 		pysttrafik/README.md \
 		pysttrafik/screenshot.png \
