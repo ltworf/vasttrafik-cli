@@ -33,7 +33,7 @@ install:
 	#Install conf
 	install -m644 -D conf/pysttrafik.conf $${DESTDIR:-/}/etc/pysttrafik.conf
 	#Install other files
-	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik
+	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik/README.md
 
 .PHONY: clean
 clean:
