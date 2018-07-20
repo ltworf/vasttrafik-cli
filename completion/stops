@@ -1,0 +1,15 @@
+#!/bin/bash
+
+_stops_tab_complete() {
+    local cur
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+
+    if [ $COMP_CWORD = 1 ] && [ -e ~/.cache/pysttrafikstops ]; then
+        words=$(cat ~/.cache/pysttrafikstops)
+    fi
+    COMPREPLY=( $(compgen -W "${words}" -- ${cur}) )
+    return 0
+}
+
+complete -F _stops_tab_complete stops
