@@ -85,9 +85,10 @@ def get_key() -> Optional[str]:
     import os
     from os.path import exists
 
-    paths = ('/etc/pysttrafik.conf',
-             "%s/.pysttrafik" % os.getenv("HOME"),
-             )
+    paths = (
+        '%s/.pysttrafik' % os.getenv("HOME"),
+        '/etc/pysttrafik.conf',
+    )
 
     path = None
     for i in paths:
