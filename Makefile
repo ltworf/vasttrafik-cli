@@ -36,6 +36,8 @@ install:
 	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik/README.md
 	install -m644 -D man/stops.1 $${DESTDIR:-/}/usr/share/man/man1/stops.1
 	install -m644 -D man/trip.1 $${DESTDIR:-/}/usr/share/man/man1/trip.1
+	install -m644 -D completion/trip $${DESTDIR:-/}/usr/share/bash-completion/completions/trip
+	install -m644 -D completion/stops $${DESTDIR:-/}/usr/share/bash-completion/completions/stops
 
 .PHONY: clean
 clean:
@@ -49,6 +51,7 @@ dist: clean
 		pysttrafik/conf/ \
 		pysttrafik/CHANGELOG \
 		pysttrafik/COPYING \
+		pysttrafik/completion \
 		pysttrafik/Makefile \
 		pysttrafik/man \
 		pysttrafik/pysttrafik.py \
