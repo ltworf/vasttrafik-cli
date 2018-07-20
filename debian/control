@@ -11,7 +11,7 @@ Homepage: https://github.com/ltworf/pysttrafik
 Package: pysttrafik
 Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends}, python3-typedload,
- python3-xtermcolor
+ python3-xtermcolor, python3-configobj
 Description: Public transport client, for the Västra Götaland county
  Västtrafik is the agency for public transport in Västra Götaland (Sweden).
  .
