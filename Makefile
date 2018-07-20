@@ -18,3 +18,18 @@
 
 all:
 	@echo Nothing to do
+
+install:
+	#Install py files
+	install -d $${DESTDIR:-/}/usr/share/pysttrafik
+	install stops.py $${DESTDIR:-/}/usr/share/pysttrafik
+	install trip.py $${DESTDIR:-/}/usr/share/pysttrafik
+	install -m644 pysttrafik.py $${DESTDIR:-/}/usr/share/pysttrafik
+	#Install links
+	install -d $${DESTDIR:-/}/usr/bin/
+	ln -fs "../share/pysttrafik/stops.py" $${DESTDIR:-/}/usr/bin/stops
+	ln -fs "../share/pysttrafik/trip.py" $${DESTDIR:-/}/usr/bin/trip
+	#Install conf
+	install -m644 -D conf/pysttrafik.conf $${DESTDIR:-/}/etc/pysttrafik.conf
+	#Install other files
+	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik
