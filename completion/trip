@@ -1,5 +1,3 @@
-#!/bin/bash
-
 _trip_tab_complete() {
     local cur
     COMPREPLY=()

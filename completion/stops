@@ -1,5 +1,3 @@
-#!/bin/bash
-
 _stops_tab_complete() {
     local cur
     COMPREPLY=()
