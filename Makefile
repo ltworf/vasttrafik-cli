@@ -19,6 +19,7 @@
 all:
 	@echo Nothing to do
 
+.PHONY: install
 install:
 	#Install py files
 	install -d $${DESTDIR:-/}/usr/share/pysttrafik
@@ -33,3 +34,17 @@ install:
 	install -m644 -D conf/pysttrafik.conf $${DESTDIR:-/}/etc/pysttrafik.conf
 	#Install other files
 	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik
+
+.PHONY: dist
+dist:
+	cd ..; tar -czvvf pysttrafik.tar.gz \
+		pysttrafik/conf/ \
+		pysttrafik/CHANGELOG \
+		pysttrafik/COPYING \
+		pysttrafik/Makefile \
+		pysttrafik/pysttrafik.py \
+		pysttrafik/README.md \
+		pysttrafik/stops.py \
+		pysttrafik/trip.py
+	mv ../pysttrafik.tar.gz pysttrafik_`head -1 CHANGELOG`.orig.tar.gz
+	gpg --detach-sign -a *.orig.tar.gz
