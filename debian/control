@@ -1,5 +1,5 @@
 Source: pysttrafik
-Section: office
+Section: utils
 Priority: optional
 Maintainer: Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>
 Build-Depends: debhelper (>= 11), python3, dh-python, python3-distutils,
@@ -10,7 +10,6 @@ Homepage: https://github.com/ltworf/pysttrafik
 
 Package: pysttrafik
 Architecture: all
-Section: python
 Depends: ${misc:Depends}, ${python3:Depends}, python3-typedload,
  python3-xtermcolor
 Description: Public transport client, for the Västra Götaland county
