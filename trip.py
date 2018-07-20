@@ -19,6 +19,7 @@
 
 import sys
 import datetime
+import os
 
 from pysttrafik import Vasttrafik, get_key
 
@@ -29,9 +30,52 @@ if key == None:
 
 vast = Vasttrafik(key)
 
+def save_completion(name: str) -> None:
+    """
+    Saves the name of the stop in the completion file
+    """
+    cachedir = '%s/.cache/' % os.getenv("HOME")
+
+    # Do nothing if cachedir is not there
+    if not os.path.exists(cachedir):
+        return
+
+    # Read file or presume empty
+    path = cachedir + 'pysttrafikstops'
+    if os.path.exists(path):
+        with open(path, 'rt') as f:
+            lines = [i.strip() for i in f]
+    else:
+        lines = []
+
+    # Trim up to the part completion can manage
+    for char in ' ,':
+        if char in name:
+            name = name.split(char, 1)[0]
+    # Only lower
+    name = name.lower()
+
+    # Do nothing if completion is there already
+    if name in lines:
+        return
+
+    # Append new stop to completion
+    lines.append(name)
+
+    # Remove old completions, if necessary
+    if len(lines) > 100:
+        lines.pop(0)
+
+    # Write the file again
+    with open(path, 'wt') as f:
+        f.write('\n'.join(lines))
+
+
 def get_stop(prompt, preset=None):
     if preset:
-        return vast.location(preset)[0]
+        r = vast.location(preset)
+        save_completion(r[0].name)
+        return r[0]
 
     while True:
         try:
@@ -54,6 +98,7 @@ def get_stop(prompt, preset=None):
             except (KeyboardInterrupt, EOFError):
                 sys.exit(0)
             try:
+                save_completion(stops[int(line)].name)
                 return stops[int(line)]
             except:
                 break
