@@ -54,7 +54,7 @@ dist: clean
 	gpg --detach-sign -a *.orig.tar.gz
 
 deb-pkg: dist
-	mv pysttrafik_`./setup.py --version`.orig.tar.gz* /tmp
+	mv pysttrafik_`head -1 CHANGELOG`.orig.tar.gz* /tmp
 	cd /tmp; tar -xf pysttrafik_*.orig.tar.gz
 	cp -r debian /tmp/pysttrafik/
 	cd /tmp/pysttrafik/; dpkg-buildpackage
