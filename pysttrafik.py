@@ -102,19 +102,6 @@ def get_key() -> Optional[str]:
         return None
 
 
-def gen_timetable_html(stops, datetime_obj) -> str:
-    '''generates the HTML to a timetable
-    takes the tram list (resulting from a call to board)
-    and the time from the server'''
-
-    r = '<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body style="background-color:black; color:white;"><table>'
-    r += '<tr><td></td><td>To</td><td>Track</td><td>Next</td></tr>'
-    for i in stops:
-        r += i.toHtml(datetime_obj)
-    r += '</table></body></html>'
-    return r
-
-
 def to_datetime(date: str, time: str) -> datetime.datetime:
     '''Converts two string date and time into a datetime object
 

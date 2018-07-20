@@ -19,7 +19,7 @@
 
 import sys
 
-from pysttrafik import Vasttrafik, gen_timetable_html, get_key
+from pysttrafik import Vasttrafik, get_key
 import trip
 
 key = get_key()

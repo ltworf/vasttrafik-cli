@@ -20,7 +20,7 @@
 import sys
 import datetime
 
-from pysttrafik import Vasttrafik, gen_timetable_html, get_key
+from pysttrafik import Vasttrafik, get_key
 
 key = get_key()
 if key == None:
