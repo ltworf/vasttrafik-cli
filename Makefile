@@ -60,5 +60,5 @@ deb-pkg: dist
 	cp -r debian /tmp/pysttrafik/
 	cd /tmp/pysttrafik/; dpkg-buildpackage
 	mkdir deb-pkg
-	mv /tmp/pysttrafik_* /tmp/pysttrafik_*.deb deb-pkg
+	mv /tmp/pysttrafik_* deb-pkg
 	$(RM) -r /tmp/pysttrafik
