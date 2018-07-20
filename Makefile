@@ -35,8 +35,12 @@ install:
 	#Install other files
 	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik
 
+.PHONY: clean
+clean:
+	$(RM) -r deb-pkg
+
 .PHONY: dist
-dist:
+dist: clean
 	cd ..; tar -czvvf pysttrafik.tar.gz \
 		pysttrafik/conf/ \
 		pysttrafik/CHANGELOG \
@@ -48,3 +52,12 @@ dist:
 		pysttrafik/trip.py
 	mv ../pysttrafik.tar.gz pysttrafik_`head -1 CHANGELOG`.orig.tar.gz
 	gpg --detach-sign -a *.orig.tar.gz
+
+deb-pkg: dist
+	mv pysttrafik_`./setup.py --version`.orig.tar.gz* /tmp
+	cd /tmp; tar -xf pysttrafik_*.orig.tar.gz
+	cp -r debian /tmp/pysttrafik/
+	cd /tmp/pysttrafik/; dpkg-buildpackage
+	mkdir deb-pkg
+	mv /tmp/pysttrafik_* /tmp/python3-pysttrafik_*.deb deb-pkg
+	$(RM) -r /tmp/pysttrafik
