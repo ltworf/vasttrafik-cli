@@ -49,6 +49,7 @@ dist: clean
 		pysttrafik/Makefile \
 		pysttrafik/pysttrafik.py \
 		pysttrafik/README.md \
+		pysttrafik/screenshot.png \
 		pysttrafik/stops.py \
 		pysttrafik/trip.py
 	mv ../pysttrafik.tar.gz pysttrafik_`head -1 CHANGELOG`.orig.tar.gz
