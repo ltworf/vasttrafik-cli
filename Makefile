@@ -39,6 +39,7 @@ install:
 clean:
 	$(RM) -r deb-pkg
 	$(RM) -r __pycache__
+	$(RM) -r *~
 
 .PHONY: dist
 dist: clean
