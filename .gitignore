@@ -11,3 +11,4 @@ gui.py
 selgui.py
 pysttrafik.kdev4
 .mypy_cache/
+deb-pkg/
