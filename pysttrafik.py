@@ -310,10 +310,12 @@ class VehicleType(Enum):
     WALK = 'WALK'
     BOAT = 'BOAT'
     VAS = 'VAS'
+    REG = 'REG'
 
     @property
     def symbol(self) -> str:
         s = {
+            self.REG: '🚅',
             self.VAS: '🚆',
             self.TRAM: '🚋',
             self.BUS: '🚌',
