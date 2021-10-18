@@ -2,8 +2,13 @@ Source: vasttrafik-cli
 Section: utils
 Priority: optional
 Maintainer: Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>
-Build-Depends: debhelper (>= 12), debhelper-compat (= 13), python3:any, dh-python, python3-distutils,
- python3-typedload
+Build-Depends:
+    debhelper (>= 12),
+    debhelper-compat (= 13),
+    python3:any,
+    dh-python,
+    python3-distutils,
+    python3-typedload
 Standards-Version: 4.6.0
 Vcs-Browser: https://github.com/ltworf/vasttrafik-cli
 Homepage: https://github.com/ltworf/vasttrafik-cli
@@ -11,9 +16,13 @@ Rules-Requires-Root: no
 
 Package: vasttrafik-cli
 Architecture: all
-Depends: ${misc:Depends}, ${python3:Depends}, python3-typedload,
- python3-xtermcolor, python3-configobj
-Description: Public transport client, for the Västra Götaland county
+Depends:
+    ${misc:Depends},
+    ${python3:Depends},
+    python3-typedload,
+    python3-xtermcolor,
+    python3-configobj
+Description: Public transport client, for Göteborg and the Västra Götaland county
  Västtrafik is the agency for public transport in Västra Götaland (Sweden).
  .
  This package provies a CLI to access their API and plan trips or see the
