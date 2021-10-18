@@ -1,7 +1,7 @@
-# pysttrafik
-# Copyright (C) 2012-2018 Salvo "LtWorf" Tomaselli
+# vasttrafik-cli
+# Copyright (C) 2012-2021 Salvo "LtWorf" Tomaselli
 #
-# pysttrafik is free software: you can redistribute it and/or modify
+# vasttrafik-cli is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -22,18 +22,18 @@ all:
 .PHONY: install
 install:
 	#Install py files
-	install -d $${DESTDIR:-/}/usr/share/pysttrafik
-	install stops.py $${DESTDIR:-/}/usr/share/pysttrafik
-	install trip.py $${DESTDIR:-/}/usr/share/pysttrafik
-	install -m644 pysttrafik.py $${DESTDIR:-/}/usr/share/pysttrafik
+	install -d $${DESTDIR:-/}/usr/share/vasttrafik-cli
+	install stops.py $${DESTDIR:-/}/usr/share/vasttrafik-cli
+	install trip.py $${DESTDIR:-/}/usr/share/vasttrafik-cli
+	install -m644 vasttrafik.py $${DESTDIR:-/}/usr/share/vasttrafik-cli
 	#Install links
 	install -d $${DESTDIR:-/}/usr/bin/
-	ln -fs "../share/pysttrafik/stops.py" $${DESTDIR:-/}/usr/bin/stops
-	ln -fs "../share/pysttrafik/trip.py" $${DESTDIR:-/}/usr/bin/trip
+	ln -fs "../share/vasttrafik-cli/stops.py" $${DESTDIR:-/}/usr/bin/stops
+	ln -fs "../share/vasttrafik-cli/trip.py" $${DESTDIR:-/}/usr/bin/trip
 	#Install conf
-	install -m644 -D conf/pysttrafik.conf $${DESTDIR:-/}/etc/pysttrafik.conf
+	install -m644 -D conf/vasttrafik-cli.conf $${DESTDIR:-/}/etc/vasttrafik-cli.conf
 	#Install other files
-	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/pysttrafik/README.md
+	install -m644 -D README.md $${DESTDIR:-/}/usr/share/doc/vasttrafik-cli/README.md
 	install -m644 -D man/stops.1 $${DESTDIR:-/}/usr/share/man/man1/stops.1
 	install -m644 -D man/trip.1 $${DESTDIR:-/}/usr/share/man/man1/trip.1
 	install -m644 -D completion/trip $${DESTDIR:-/}/usr/share/bash-completion/completions/trip
@@ -47,26 +47,26 @@ clean:
 
 .PHONY: dist
 dist: clean
-	cd ..; tar -czvvf pysttrafik.tar.gz \
-		pysttrafik/conf/ \
-		pysttrafik/CHANGELOG \
-		pysttrafik/COPYING \
-		pysttrafik/completion \
-		pysttrafik/Makefile \
-		pysttrafik/man \
-		pysttrafik/pysttrafik.py \
-		pysttrafik/README.md \
-		pysttrafik/screenshot.png \
-		pysttrafik/stops.py \
-		pysttrafik/trip.py
-	mv ../pysttrafik.tar.gz pysttrafik_`head -1 CHANGELOG`.orig.tar.gz
+	cd ..; tar -czvvf vasttrafik-cli.tar.gz \
+		vasttrafik-cli/conf/ \
+		vasttrafik-cli/CHANGELOG \
+		vasttrafik-cli/COPYING \
+		vasttrafik-cli/completion \
+		vasttrafik-cli/Makefile \
+		vasttrafik-cli/man \
+		vasttrafik-cli/vasttrafik.py \
+		vasttrafik-cli/README.md \
+		vasttrafik-cli/screenshot.png \
+		vasttrafik-cli/stops.py \
+		vasttrafik-cli/trip.py
+	mv ../vasttrafik-cli.tar.gz vasttrafik-cli_`head -1 CHANGELOG`.orig.tar.gz
 	gpg --detach-sign -a *.orig.tar.gz
 
 deb-pkg: dist
-	mv pysttrafik_`head -1 CHANGELOG`.orig.tar.gz* /tmp
-	cd /tmp; tar -xf pysttrafik_*.orig.tar.gz
-	cp -r debian /tmp/pysttrafik/
-	cd /tmp/pysttrafik/; dpkg-buildpackage
+	mv vasttrafik-cli_`head -1 CHANGELOG`.orig.tar.gz* /tmp
+	cd /tmp; tar -xf vasttrafik-cli_*.orig.tar.gz
+	cp -r debian /tmp/vasttrafik-cli/
+	cd /tmp/vasttrafik-cli/; dpkg-buildpackage
 	mkdir deb-pkg
-	mv /tmp/pysttrafik_* deb-pkg
-	$(RM) -r /tmp/pysttrafik
+	mv /tmp/vasttrafik-cli_* deb-pkg
+	$(RM) -r /tmp/vasttrafik-cli

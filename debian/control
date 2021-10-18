@@ -1,4 +1,4 @@
-Source: pysttrafik
+Source: vasttrafik-cli
 Section: utils
 Priority: optional
 Maintainer: Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>
@@ -6,9 +6,9 @@ Build-Depends: debhelper (>= 11), python3, dh-python, python3-distutils,
  python3-typedload
 Standards-Version: 4.1.5
 X-Python3-Version: >= 3.6
-Homepage: https://github.com/ltworf/pysttrafik
+Homepage: https://github.com/ltworf/vasttrafik-cli
 
-Package: pysttrafik
+Package: vasttrafik-cli
 Architecture: all
 Depends: ${misc:Depends}, ${python3:Depends}, python3-typedload,
  python3-xtermcolor, python3-configobj

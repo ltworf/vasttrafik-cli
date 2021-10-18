@@ -1,7 +1,7 @@
-# pysttrafik
-# Copyright (C) 2012-2018 Salvo "LtWorf" Tomaselli
+# vasttrafik-cli
+# Copyright (C) 2012-2021 Salvo "LtWorf" Tomaselli
 #
-# pysttrafik is free software: you can redistribute it and/or modify
+# vasttrafik-cli is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -74,8 +74,8 @@ def get_key() -> Optional[str]:
     '''
     This function tries to load the API key from some configuration files.
     It will try, in the order:
-        - /etc/pysttrafik.conf
-        - ~/.pysttrafik
+        - /etc/vasttrafik-cli.conf
+        - ~/.vasttrafik-cli
 
     If the files aren't found or they don't contain the key attribute then
     None will be returned, otherwise, a string containing the key will be
@@ -86,8 +86,8 @@ def get_key() -> Optional[str]:
     from os.path import exists
 
     paths = (
-        '%s/.pysttrafik' % os.getenv("HOME"),
-        '/etc/pysttrafik.conf',
+        '%s/.vasttrafik-cli' % os.getenv("HOME"),
+        '/etc/vasttrafik-cli.conf',
     )
 
     path = None
