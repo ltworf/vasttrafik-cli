@@ -4,8 +4,7 @@ Priority: optional
 Maintainer: Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>
 Build-Depends: debhelper (>= 13), python3:any, dh-python, python3-distutils,
  python3-typedload
-Standards-Version: 4.1.5
-X-Python3-Version: >= 3.6
+Standards-Version: 4.6.0
 Vcs-Browser: https://github.com/ltworf/vasttrafik-cli
 Homepage: https://github.com/ltworf/vasttrafik-cli
 Rules-Requires-Root: no
