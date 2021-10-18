@@ -54,7 +54,7 @@ dist: clean
 		vasttrafik-cli/completion \
 		vasttrafik-cli/Makefile \
 		vasttrafik-cli/man \
-		vasttrafik-cli/vasttrafik-cli.py \
+		vasttrafik-cli/vasttrafik.py \
 		vasttrafik-cli/README.md \
 		vasttrafik-cli/screenshot.png \
 		vasttrafik-cli/stops.py \
