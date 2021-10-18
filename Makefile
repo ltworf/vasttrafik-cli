@@ -25,7 +25,7 @@ install:
 	install -d $${DESTDIR:-/}/usr/share/vasttrafik-cli
 	install stops.py $${DESTDIR:-/}/usr/share/vasttrafik-cli
 	install trip.py $${DESTDIR:-/}/usr/share/vasttrafik-cli
-	install -m644 vasttrafik-cli.py $${DESTDIR:-/}/usr/share/vasttrafik-cli
+	install -m644 vasttrafik.py $${DESTDIR:-/}/usr/share/vasttrafik-cli
 	#Install links
 	install -d $${DESTDIR:-/}/usr/bin/
 	ln -fs "../share/vasttrafik-cli/stops.py" $${DESTDIR:-/}/usr/bin/stops
