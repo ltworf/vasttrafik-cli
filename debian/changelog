@@ -1,5 +1,5 @@
-vasttrafik-cli (1.0-1) unstable; urgency=low
+vasttrafik-cli (1.1-1) unstable; urgency=low
 
   * Initial release. (Closes: #904135)
 
- -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Fri, 20 Jul 2018 10:43:25 +0200
+ -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Mon, 18 Oct 2021 14:58:53 +0200
