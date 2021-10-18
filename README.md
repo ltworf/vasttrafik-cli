@@ -1,5 +1,5 @@
-pysttrafik
-==========
+vasttrafik-cli
+==============
 
 python API for Göteborg Västtrafik public API
 
@@ -9,7 +9,7 @@ two command line tools: trip and stops. I think the names are self explaining.
 Västtrafik is the public transport company in the county of Västra Götaland,
 Sweden.
 
-![ScreenShot](https://raw.github.com/ltworf/pysttrafik/master/screenshot.png)
+![ScreenShot](https://raw.github.com/ltworf/vasttrafik-cli/master/screenshot.png)
 
 
 Suggestions

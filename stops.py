@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# pysttrafik
-# Copyright (C) 2012-2018 Salvo "LtWorf" Tomaselli
+# vasttrafik-cli
+# Copyright (C) 2012-2021 Salvo "LtWorf" Tomaselli
 #
-# pysttrafik is free software: you can redistribute it and/or modify
+# vasttrafik-cli is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -19,7 +19,7 @@
 
 import sys
 
-from pysttrafik import Vasttrafik, get_key
+from vasttrafik import Vasttrafik, get_key
 import trip
 
 key = get_key()

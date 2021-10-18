@@ -3,8 +3,8 @@ _stops_tab_complete() {
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
 
-    if [ $COMP_CWORD = 1 ] && [ -e ~/.cache/pysttrafikstops ]; then
-        words=$(cat ~/.cache/pysttrafikstops)
+    if [ $COMP_CWORD = 1 ] && [ -e ~/.cache/vasttrafik-cli-stops ]; then
+        words=$(cat ~/.cache/vasttrafik-cli-stops)
     fi
     COMPREPLY=( $(compgen -W "${words}" -- ${cur}) )
     return 0
