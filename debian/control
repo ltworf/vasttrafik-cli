@@ -5,7 +5,7 @@ Maintainer: Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>
 Build-Depends:
     debhelper-compat (= 13),
     python3:any,
-    dh-python,
+    dh-sequence-python3,
     python3-typedload
 Standards-Version: 4.6.0
 Vcs-Browser: https://github.com/ltworf/vasttrafik-cli
