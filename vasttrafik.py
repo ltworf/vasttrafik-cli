@@ -177,7 +177,7 @@ class Vasttrafik:
         '''
         params = 'originCoordLat=%s&originCoordLong=%s&maxNo=%d' % (
             str(lat), str(lon), stops)
-        if dist != None:
+        if dist is not None:
             params += '&maxDist=%d' % dist
 
         b = self._request('location.nearbystops', params)
