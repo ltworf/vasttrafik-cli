@@ -61,7 +61,7 @@ def get_key() -> Optional[str]:
 
 
 key = get_key()
-vast = Vasttrafik(key)
+vast = Vasttrafik(key, CACHEDIR / 'vasttrafik-cli-token')
 
 
 def save_completion(name: str) -> None:
