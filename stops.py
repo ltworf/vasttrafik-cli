@@ -23,7 +23,7 @@ from vasttrafik import Vasttrafik, get_key
 import trip
 
 key = get_key()
-if key == None:
+if key is None:
     print("No configuration")
     sys.exit(1)
 
