@@ -167,16 +167,16 @@ def tripmain():
     orig = sys.argv[1] if len(sys.argv) > 2 else None
     dest = sys.argv[2] if len(sys.argv) > 2 else None
 
-    orig = get_stop('FROM: > ', orig)
-    dest = get_stop('TO: > ', dest)
+    origstop = get_stop('FROM: > ', orig)
+    deststop = get_stop('TO: > ', dest)
 
-    if orig is None or dest is None:
+    if origstop is None or deststop is None:
         return
 
     time = get_time(len(sys.argv) == 3)
 
-    print('\t%s → %s\t Trips since: %s' % (orig.name, dest.name, str(time)))
-    for i in vast.trip(originId=orig.id, destId=dest.id, datetime_obj=time):
+    print('\t%s → %s\t Trips since: %s' % (origstop.name, deststop.name, str(time)))
+    for i in vast.trip(originId=origstop.id, destId=deststop.id, datetime_obj=time):
         print(i.toTerm())
         print("=========================")
 
