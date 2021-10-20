@@ -30,7 +30,7 @@ CONFIGDIR = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config'))
 CACHEDIR = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache'))
 
 
-def get_key() -> Optional[str]:
+def get_key() -> str:
     '''
     This function tries to load the API key from some configuration files.
     It will try, in the order:
@@ -41,7 +41,7 @@ def get_key() -> Optional[str]:
     None will be returned, otherwise, a string containing the key will be
     returned.
     '''
-    from configobj import ConfigObj
+    from configobj import ConfigObj  # type: ignore
 
     paths = (
         Path.home() / '.vasttrafik-cli',
@@ -167,16 +167,16 @@ def tripmain():
     orig = sys.argv[1] if len(sys.argv) > 2 else None
     dest = sys.argv[2] if len(sys.argv) > 2 else None
 
-    orig = get_stop('FROM: > ', orig)
-    dest = get_stop('TO: > ', dest)
+    origstop = get_stop('FROM: > ', orig)
+    deststop = get_stop('TO: > ', dest)
 
-    if orig is None or dest is None:
+    if origstop is None or deststop is None:
         return
 
     time = get_time(len(sys.argv) == 3)
 
-    print('\t%s → %s\t Trips since: %s' % (orig.name, dest.name, str(time)))
-    for i in vast.trip(originId=orig.id, destId=dest.id, datetime_obj=time):
+    print('\t%s → %s\t Trips since: %s' % (origstop.name, deststop.name, str(time)))
+    for i in vast.trip(originId=origstop.id, destId=deststop.id, datetime_obj=time):
         print(i.toTerm())
         print("=========================")
 

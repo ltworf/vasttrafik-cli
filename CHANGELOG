@@ -1,4 +1,5 @@
 1.2
+* Show vehicle type in stops as well
 * Do not print blank lines before the stop board
 * Cache authentication token. Less network wait time
 

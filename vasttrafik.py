@@ -28,11 +28,7 @@ from typing import Dict, List, Optional, NamedTuple, Union
 from pathlib import Path
 
 from typedload import load, dump
-
-try:
-    from xtermcolor import colorize
-except:
-    colorize = lambda x, rgb=None, ansi=None, bg=None, ansi_bg=None, fd=1: x
+from xtermcolor import colorize  # type: ignore
 
 
 class Stop(NamedTuple):
@@ -92,7 +88,7 @@ class Vasttrafik:
         '''
         self.key = key
         self.api = api
-        self.datetime_obj = None
+        self.datetime_obj: Optional[datetime.datetime] = None
         self._tokenfile = tokenfile
         self._token: Optional[Token] = None
 
@@ -120,7 +116,7 @@ class Vasttrafik:
         req.headers['Authorization'] = 'Basic ' + self.key
         with urllib.request.urlopen(req) as f:
             r = load(json.load(f), Token)
-        r.expires_in += monotonic()
+        r.expires_in += int(monotonic())
         return r
 
     def _request(self, service, param):
@@ -316,7 +312,7 @@ class VehicleType(Enum):
             self.BOAT: '⛴',
             self.ST: ' '
         }
-        return s[self]
+        return s[self]  # type: ignore
 
 
 class Leg(NamedTuple):
@@ -457,7 +453,7 @@ class BoardItem:
     has a bunch of attributes to represent the stop
     '''
     name: str
-    sname: Optional[str]
+    sname: str
 
     vehicle_type: VehicleType = field(metadata={'name': 'type'})
     stop: str
@@ -507,21 +503,7 @@ class BoardItem:
         return False
 
     def toTxt(self, servertime):
-        return self.toTerm(servertime, color=false)
-
-    def toHtml(self, servertime):
-        delta = [((i - servertime).seconds // 60) for i in self.datetime_obj]
-        delta.sort()
-
-        name = self.getName()
-
-        bus = '<td  style="background-color:%s; color:%s;" >%s</td>' % (
-            self.fgcolor, self.bgcolor, name)
-        direction = '<td>%s</td>' % self.direction
-        track = '<td>%s</td>' % self.track
-        delta = '<td>%s</td>' % ','.join(map(str, delta))
-
-        return '<tr>%s%s%s%s</tr>' % (bus, direction, track, delta)
+        return self.toTerm(servertime, color=False)
 
     def toTerm(self, servertime, color=True):
         '''Returns a string representing the BoardItem colorized using
