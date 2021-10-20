@@ -20,8 +20,42 @@
 import sys
 import datetime
 import os
+from typing import Optional
 
-from vasttrafik import Vasttrafik, get_key
+from vasttrafik import Vasttrafik
+
+
+def get_key() -> Optional[str]:
+    '''
+    This function tries to load the API key from some configuration files.
+    It will try, in the order:
+        - /etc/vasttrafik-cli.conf
+        - ~/.vasttrafik-cli
+
+    If the files aren't found or they don't contain the key attribute then
+    None will be returned, otherwise, a string containing the key will be
+    returned.
+    '''
+    from configobj import ConfigObj
+    import os
+    from os.path import exists
+
+    paths = (
+        '%s/.vasttrafik-cli' % os.getenv("HOME"),
+        '/etc/vasttrafik-cli.conf',
+    )
+
+    path = None
+    for i in paths:
+        if exists(i):
+            path = i
+            break
+    try:
+        config = ConfigObj(path)
+        return config['key']
+    except:
+        return None
+
 
 key = get_key()
 if key is None:

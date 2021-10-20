@@ -19,10 +19,10 @@
 
 import sys
 
-from vasttrafik import Vasttrafik, get_key
+from vasttrafik import Vasttrafik
 import trip
 
-key = get_key()
+key = trip.get_key()
 if key is None:
     print("No configuration")
     sys.exit(1)
