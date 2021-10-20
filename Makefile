@@ -70,3 +70,7 @@ deb-pkg: dist
 	mkdir deb-pkg
 	mv /tmp/vasttrafik-cli_* deb-pkg
 	$(RM) -r /tmp/vasttrafik-cli
+
+.PHONY: mypy
+mypy:
+	mypy --config-file mypy.conf *.py
