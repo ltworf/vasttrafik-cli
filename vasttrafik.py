@@ -116,7 +116,7 @@ class Vasttrafik:
         req.headers['Authorization'] = 'Basic ' + self.key
         with urllib.request.urlopen(req) as f:
             r = load(json.load(f), Token)
-        r.expires_in += monotonic()
+        r.expires_in += int(monotonic())
         return r
 
     def _request(self, service, param):
