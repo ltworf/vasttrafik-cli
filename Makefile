@@ -73,4 +73,4 @@ deb-pkg: dist
 
 .PHONY: mypy
 mypy:
-	mypy --config-file mypy.conf *.py
+	mypy --config-file mypy.conf trip.py
