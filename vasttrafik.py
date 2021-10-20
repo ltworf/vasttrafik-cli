@@ -110,10 +110,14 @@ def to_datetime(date: str, time: str) -> datetime.datetime:
     time format HH:MM
     '''
     r = re.match(r'^([0-9]{1,4})-([0-9]{1,2})-([0-9]{1,2})$', date)
+    if r is None:
+        raise Exception(f'Incorrect format: {date}')
     year = int(r.group(1))
     month = int(r.group(2))
     day = int(r.group(3))
     r = re.match(r'^([0-9]{1,2}):([0-9]{1,2})$', time)
+    if r is None:
+        raise Exception(f'Incorrect format: {time}')
     hour = int(r.group(1))
     minute = int(r.group(2))
     return datetime.datetime(year, month, day, hour, minute)
