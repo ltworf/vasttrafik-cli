@@ -3,6 +3,10 @@ Section: utils
 Priority: optional
 Maintainer: Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>
 Build-Depends:
+    mypy,
+    python3-typedload,
+    python3-xtermcolor,
+    python3-configobj,
     debhelper-compat (= 13),
     dh-sequence-python3
 Standards-Version: 4.6.0

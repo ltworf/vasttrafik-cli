@@ -55,6 +55,7 @@ dist: clean
 		vasttrafik-cli/Makefile \
 		vasttrafik-cli/man \
 		vasttrafik-cli/vasttrafik.py \
+		vasttrafik-cli/mypy.conf \
 		vasttrafik-cli/README.md \
 		vasttrafik-cli/screenshot.png \
 		vasttrafik-cli/stops.py \
@@ -74,3 +75,6 @@ deb-pkg: dist
 .PHONY: mypy
 mypy:
 	mypy --config-file mypy.conf trip.py
+
+.PHONY: test
+test: mypy

@@ -1,6 +1,7 @@
 vasttrafik-cli (1.2-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * Running tests after build
 
  -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Wed, 20 Oct 2021 11:49:18 +0200
 
