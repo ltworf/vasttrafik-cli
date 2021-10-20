@@ -30,7 +30,7 @@ CONFIGDIR = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config'))
 CACHEDIR = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache'))
 
 
-def get_key() -> Optional[str]:
+def get_key() -> str:
     '''
     This function tries to load the API key from some configuration files.
     It will try, in the order:
