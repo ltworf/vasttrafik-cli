@@ -163,7 +163,7 @@ def get_time(default):
     return r
 
 
-def main():
+def tripmain():
     orig = sys.argv[1] if len(sys.argv) > 2 else None
     dest = sys.argv[2] if len(sys.argv) > 2 else None
 
@@ -180,5 +180,24 @@ def main():
         print(i.toTerm())
         print("=========================")
 
+
+def stopsmain():
+    preset = sys.argv[1] if len(sys.argv) == 2 else ''
+    stop = get_stop('> ', preset)
+    trams = vast.board(stop.id, time_span=120, departures=4)
+
+    print("\t\t%s, Time: %s\n" % (stop.name, vast.datetime_obj))
+    prev_track = None
+    for i in trams:
+        if prev_track != i.track:
+            print("   == Track %s ==" % i.track)
+        prev_track = i.track
+        print(i.toTerm(vast.datetime_obj))
+
+
 if __name__ == '__main__':
-    main()
+    cmdname = Path(sys.argv[0]).name
+    if cmdname.startswith('trip'):
+        tripmain()
+    elif cmdname.startswith('stops'):
+        stopsmain()
