@@ -20,33 +20,56 @@
 import sys
 import datetime
 import os
+from typing import Optional
+from pathlib import Path
 
-from vasttrafik import Vasttrafik, get_key
+from vasttrafik import Vasttrafik
+
+
+CONFIGDIR = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config'))
+CACHEDIR = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache'))
+
+
+def get_key() -> Optional[str]:
+    '''
+    This function tries to load the API key from some configuration files.
+    It will try, in the order:
+        - /etc/vasttrafik-cli.conf
+        - ~/.vasttrafik-cli
+
+    If the files aren't found or they don't contain the key attribute then
+    None will be returned, otherwise, a string containing the key will be
+    returned.
+    '''
+    from configobj import ConfigObj
+
+    paths = (
+        Path.home() / '.vasttrafik-cli',
+        CONFIGDIR / 'vasttrafik-cli.conf',
+        Path('/etc/vasttrafik-cli.conf'),
+    )
+
+    path = None
+    for i in paths:
+        if i.exists():
+            path = i
+            break
+    if path is None:
+        raise Exception('No configuration file found')
+    config = ConfigObj(str(path))
+    return config['key']
+
 
 key = get_key()
-if key is None:
-    print("No configuration")
-    sys.exit(1)
+vast = Vasttrafik(key, CACHEDIR / 'vasttrafik-cli-token')
 
-vast = Vasttrafik(key)
 
 def save_completion(name: str) -> None:
     """
     Saves the name of the stop in the completion file
     """
-    cachedir = '%s/.cache/' % os.getenv("HOME")
-
-    # Do nothing if cachedir is not there
-    if not os.path.exists(cachedir):
+    if not CACHEDIR.exists():
         return
-
-    # Read file or presume empty
-    path = cachedir + 'vasttrafik-cli-stops'
-    if os.path.exists(path):
-        with open(path, 'rt') as f:
-            lines = [i.strip() for i in f]
-    else:
-        lines = []
 
     # Trim up to the part completion can manage
     for char in ' ,':
@@ -54,6 +77,14 @@ def save_completion(name: str) -> None:
             name = name.split(char, 1)[0]
     # Only lower
     name = name.lower()
+
+    # Read file or presume empty
+    path = CACHEDIR / 'vasttrafik-cli-stops'
+    if path.exists():
+        with path.open('rt') as f:
+            lines = [i.strip() for i in f]
+    else:
+        lines = []
 
     # Do nothing if completion is there already
     if name in lines:
@@ -67,7 +98,7 @@ def save_completion(name: str) -> None:
         lines.pop(0)
 
     # Write the file again
-    with open(path, 'wt') as f:
+    with path.open('wt') as f:
         f.write('\n'.join(lines))
 
 
@@ -132,7 +163,7 @@ def get_time(default):
     return r
 
 
-def main():
+def tripmain():
     orig = sys.argv[1] if len(sys.argv) > 2 else None
     dest = sys.argv[2] if len(sys.argv) > 2 else None
 
@@ -149,5 +180,24 @@ def main():
         print(i.toTerm())
         print("=========================")
 
+
+def stopsmain():
+    preset = sys.argv[1] if len(sys.argv) == 2 else ''
+    stop = get_stop('> ', preset)
+    trams = vast.board(stop.id, time_span=120, departures=4)
+
+    print("\t\t%s, Time: %s\n" % (stop.name, vast.datetime_obj))
+    prev_track = None
+    for i in trams:
+        if prev_track != i.track:
+            print("   == Track %s ==" % i.track)
+        prev_track = i.track
+        print(i.toTerm(vast.datetime_obj))
+
+
 if __name__ == '__main__':
-    main()
+    cmdname = Path(sys.argv[0]).name
+    if cmdname.startswith('trip'):
+        tripmain()
+    elif cmdname.startswith('stops'):
+        stopsmain()

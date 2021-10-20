@@ -1,5 +1,6 @@
 1.2
 * Do not print blank lines before the stop board
+* Cache authentication token. Less network wait time
 
 1.1
 * Proper packaging

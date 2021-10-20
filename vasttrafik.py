@@ -25,8 +25,9 @@ import json
 import re
 from time import monotonic
 from typing import Dict, List, Optional, NamedTuple, Union
+from pathlib import Path
 
-from typedload import load
+from typedload import load, dump
 
 try:
     from xtermcolor import colorize
@@ -52,55 +53,13 @@ class Stop(NamedTuple):
 
 Stops = List[Stop]
 
-
-class Token(NamedTuple):
+@dataclass
+class Token:
     expires_in: int
     access_token: str
 
-def _get_token(key: str) -> str:
-    if hasattr(_get_token, 'token') and monotonic() < _get_token.obtained + _get_token.token.expires_in:
-            return _get_token.token.access_token
-    url = "https://api.vasttrafik.se:443/token"
-    req = urllib.request.Request(url)
-    req.data = b'grant_type=client_credentials'
-    req.headers['Authorization'] = 'Basic ' + key
-    with urllib.request.urlopen(req) as f:
-        token = load(json.load(f), Token)
-    _get_token.token = token
-    _get_token.obtained = monotonic()
-    return token.access_token
-
-
-def get_key() -> Optional[str]:
-    '''
-    This function tries to load the API key from some configuration files.
-    It will try, in the order:
-        - /etc/vasttrafik-cli.conf
-        - ~/.vasttrafik-cli
-
-    If the files aren't found or they don't contain the key attribute then
-    None will be returned, otherwise, a string containing the key will be
-    returned.
-    '''
-    from configobj import ConfigObj
-    import os
-    from os.path import exists
-
-    paths = (
-        '%s/.vasttrafik-cli' % os.getenv("HOME"),
-        '/etc/vasttrafik-cli.conf',
-    )
-
-    path = None
-    for i in paths:
-        if exists(i):
-            path = i
-            break
-    try:
-        config = ConfigObj(path)
-        return config['key']
-    except:
-        return None
+    def expired(self) -> bool:
+        return self.expires_in < monotonic()
 
 
 def to_datetime(date: str, time: str) -> datetime.datetime:
@@ -125,7 +84,7 @@ def to_datetime(date: str, time: str) -> datetime.datetime:
 
 class Vasttrafik:
 
-    def __init__(self, key: str, api: str = "api.vasttrafik.se/bin/rest.exe/v2") -> None:
+    def __init__(self, key: str, tokenfile: Path, api: str = "api.vasttrafik.se/bin/rest.exe/v2") -> None:
         '''
         key is the API key that must be sent on every request to obtain a reply.
         you can obtain one at api.vasttrafik.se, but it will be activated the
@@ -134,9 +93,38 @@ class Vasttrafik:
         self.key = key
         self.api = api
         self.datetime_obj = None
+        self._tokenfile = tokenfile
+        self._token: Optional[Token] = None
+
+    def _get_token(self) -> Token:
+        # Attempt to get cached token
+        if self._token is None and self._tokenfile.exists():
+            with self._tokenfile.open('rt') as f:
+                self._token = load(json.load(f), Token)
+
+        # If there is a token but it's expired, null it
+        if self._token and self._token.expired():
+            self._token = None
+
+        if self._token is None:
+            self._token = self._renew_token()
+
+            with self._tokenfile.open('wt') as f:
+                json.dump(dump(self._token), f)
+        return self._token
+
+    def _renew_token(self) -> Token:
+        url = f'https://api.vasttrafik.se:443/token'
+        req = urllib.request.Request(url)
+        req.data = b'grant_type=client_credentials'
+        req.headers['Authorization'] = 'Basic ' + self.key
+        with urllib.request.urlopen(req) as f:
+            r = load(json.load(f), Token)
+        r.expires_in += monotonic()
+        return r
 
     def _request(self, service, param):
-        token = _get_token(self.key)
+        token = self._get_token().access_token
 
         url = "https://%s/%s?format=json&%s" % (
             self.api, service, param)
