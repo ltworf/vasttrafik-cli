@@ -457,7 +457,7 @@ class BoardItem:
     has a bunch of attributes to represent the stop
     '''
     name: str
-    sname: Optional[str]
+    sname: str
 
     vehicle_type: VehicleType = field(metadata={'name': 'type'})
     stop: str
