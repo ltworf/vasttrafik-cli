@@ -38,7 +38,6 @@ def main():
         print("Error")
         sys.exit(1)
 
-    print("\n\n\n\n\n\n\n\n\n")
     print("\t\t%s, Time: %s\n" % (stop.name, vast.datetime_obj))
     prev_track = None
     for i in trams:
