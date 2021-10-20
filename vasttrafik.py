@@ -507,7 +507,7 @@ class BoardItem:
         return False
 
     def toTxt(self, servertime):
-        return self.toTerm(servertime, color=false)
+        return self.toTerm(servertime, color=False)
 
     def toHtml(self, servertime):
         delta = [((i - servertime).seconds // 60) for i in self.datetime_obj]
