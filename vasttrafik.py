@@ -316,7 +316,7 @@ class VehicleType(Enum):
             self.BOAT: '⛴',
             self.ST: ' '
         }
-        return s[self]
+        return s[self]  # type: ignore
 
 
 class Leg(NamedTuple):
