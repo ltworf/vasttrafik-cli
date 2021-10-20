@@ -509,20 +509,6 @@ class BoardItem:
     def toTxt(self, servertime):
         return self.toTerm(servertime, color=False)
 
-    def toHtml(self, servertime):
-        delta = [((i - servertime).seconds // 60) for i in self.datetime_obj]
-        delta.sort()
-
-        name = self.getName()
-
-        bus = '<td  style="background-color:%s; color:%s;" >%s</td>' % (
-            self.fgcolor, self.bgcolor, name)
-        direction = '<td>%s</td>' % self.direction
-        track = '<td>%s</td>' % self.track
-        delta = '<td>%s</td>' % ','.join(map(str, delta))
-
-        return '<tr>%s%s%s%s</tr>' % (bus, direction, track, delta)
-
     def toTerm(self, servertime, color=True):
         '''Returns a string representing the BoardItem colorized using
         terminal escape codes.
