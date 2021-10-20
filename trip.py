@@ -21,8 +21,13 @@ import sys
 import datetime
 import os
 from typing import Optional
+from pathlib import Path
 
 from vasttrafik import Vasttrafik
+
+
+CONFIGDIR = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config'))
+CACHEDIR = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache'))
 
 
 def get_key() -> Optional[str]:
@@ -37,50 +42,34 @@ def get_key() -> Optional[str]:
     returned.
     '''
     from configobj import ConfigObj
-    import os
-    from os.path import exists
 
     paths = (
-        '%s/.vasttrafik-cli' % os.getenv("HOME"),
-        '/etc/vasttrafik-cli.conf',
+        Path.home() / '.vasttrafik-cli',
+        CONFIGDIR / 'vasttrafik-cli.conf',
+        Path('/etc/vasttrafik-cli.conf'),
     )
 
     path = None
     for i in paths:
-        if exists(i):
+        if i.exists():
             path = i
             break
-    try:
-        config = ConfigObj(path)
-        return config['key']
-    except:
-        return None
+    if path is None:
+        raise Exception('No configuration file found')
+    config = ConfigObj(str(path))
+    return config['key']
 
 
 key = get_key()
-if key is None:
-    print("No configuration")
-    sys.exit(1)
-
 vast = Vasttrafik(key)
+
 
 def save_completion(name: str) -> None:
     """
     Saves the name of the stop in the completion file
     """
-    cachedir = '%s/.cache/' % os.getenv("HOME")
-
-    # Do nothing if cachedir is not there
-    if not os.path.exists(cachedir):
+    if not CACHEDIR.exists():
         return
-
-    # Read file or presume empty
-    path = cachedir + 'vasttrafik-cli-stops'
-    if os.path.exists(path):
-        with open(path, 'rt') as f:
-            lines = [i.strip() for i in f]
-    else:
-        lines = []
 
     # Trim up to the part completion can manage
     for char in ' ,':
@@ -88,6 +77,14 @@ def save_completion(name: str) -> None:
             name = name.split(char, 1)[0]
     # Only lower
     name = name.lower()
+
+    # Read file or presume empty
+    path = CACHEDIR / 'vasttrafik-cli-stops'
+    if path.exists():
+        with path.open('rt') as f:
+            lines = [i.strip() for i in f]
+    else:
+        lines = []
 
     # Do nothing if completion is there already
     if name in lines:
@@ -101,7 +98,7 @@ def save_completion(name: str) -> None:
         lines.pop(0)
 
     # Write the file again
-    with open(path, 'wt') as f:
+    with path.open('wt') as f:
         f.write('\n'.join(lines))
 
 

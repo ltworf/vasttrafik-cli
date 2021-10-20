@@ -23,10 +23,6 @@ from vasttrafik import Vasttrafik
 import trip
 
 key = trip.get_key()
-if key is None:
-    print("No configuration")
-    sys.exit(1)
-
 vast = Vasttrafik(key)
 
 def main():
