@@ -92,7 +92,7 @@ class Vasttrafik:
         '''
         self.key = key
         self.api = api
-        self.datetime_obj = None
+        self.datetime_obj: Optional[datetime.datetime] = None
         self._tokenfile = tokenfile
         self._token: Optional[Token] = None
 
