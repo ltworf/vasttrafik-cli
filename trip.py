@@ -24,7 +24,7 @@ import os
 from vasttrafik import Vasttrafik, get_key
 
 key = get_key()
-if key == None:
+if key is None:
     print("No configuration")
     sys.exit(1)
 
@@ -139,7 +139,7 @@ def main():
     orig = get_stop('FROM: > ', orig)
     dest = get_stop('TO: > ', dest)
 
-    if orig == None or dest == None:
+    if orig is None or dest is None:
         return
 
     time = get_time(len(sys.argv) == 3)

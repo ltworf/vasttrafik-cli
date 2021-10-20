@@ -23,7 +23,7 @@ from vasttrafik import Vasttrafik, get_key
 import trip
 
 key = get_key()
-if key == None:
+if key is None:
     print("No configuration")
     sys.exit(1)
 
@@ -32,11 +32,7 @@ vast = Vasttrafik(key)
 def main():
     preset = sys.argv[1] if len(sys.argv) == 2 else ''
     stop = trip.get_stop('> ', preset)
-    try:
-        trams = vast.board(stop.id, time_span=120, departures=4)
-    except:
-        print("Error")
-        sys.exit(1)
+    trams = vast.board(stop.id, time_span=120, departures=4)
 
     print("\t\t%s, Time: %s\n" % (stop.name, vast.datetime_obj))
     prev_track = None
