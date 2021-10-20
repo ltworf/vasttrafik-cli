@@ -28,11 +28,7 @@ from typing import Dict, List, Optional, NamedTuple, Union
 from pathlib import Path
 
 from typedload import load, dump
-
-try:
-    from xtermcolor import colorize
-except:
-    colorize = lambda x, rgb=None, ansi=None, bg=None, ansi_bg=None, fd=1: x
+from xtermcolor import colorize  # type: ignore
 
 
 class Stop(NamedTuple):
