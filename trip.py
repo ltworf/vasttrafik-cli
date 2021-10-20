@@ -41,7 +41,7 @@ def get_key() -> str:
     None will be returned, otherwise, a string containing the key will be
     returned.
     '''
-    from configobj import ConfigObj
+    from configobj import ConfigObj  # type: ignore
 
     paths = (
         Path.home() / '.vasttrafik-cli',
