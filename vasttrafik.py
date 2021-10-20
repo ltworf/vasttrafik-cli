@@ -16,6 +16,7 @@
 #
 # author Salvo "LtWorf" Tomaselli <tiposchi@tiscali.it>
 
+from dataclasses import dataclass, field
 import urllib.request
 import urllib.parse
 import datetime
@@ -216,7 +217,7 @@ class Vasttrafik:
         if not isinstance(c, list):
             c = [c]
 
-        trams = [BoardItem(i) for i in c]
+        trams = load(c, List[BoardItem])
 
         # Group similar ones
         i = 0
@@ -445,10 +446,62 @@ class Trip(NamedTuple):
 Trips = List[Trip]
 
 
-class BoardItem(object):
+class Accessibility(Enum):
+    WHEEL_CHAIR = 'wheelChair'
+    NONE = None
 
-    '''This represents one item of the panel at a stop
-    has a bunch of attributes to represent the stop'''
+    @property
+    def symbol(self):
+        if self == self.WHEEL_CHAIR:
+            return '♿'
+        return ''
+
+
+@dataclass
+class BoardItem:
+
+    '''
+    This represents one item of the panel at a stop
+    has a bunch of attributes to represent the stop
+    '''
+    name: str
+    sname: Optional[str]
+
+    vehicle_type: VehicleType = field(metadata={'name': 'type'})
+    stop: str
+    stopid: str
+    direction: Optional[str]
+
+    _time: str = field(metadata={'name': 'time'})
+    _date: str = field(metadata={'name': 'date'})
+    _track: str = field(metadata={'name': 'track'})
+    _rtdate: Optional[str] = field(metadata={'name': 'rtDate'}, default=None)
+    _rttime: Optional[str] = field(metadata={'name': 'rtTime'}, default=None)
+    _rttrack: Optional[str] = field(metadata={'name': 'rtTrack'}, default=None)
+
+    accessibility: Accessibility = Accessibility.NONE
+    night: Optional[str] = None
+
+    datetime_obj: List[datetime.datetime] = field(init=False)
+
+    #stroke: Optional[str] = None
+    bgcolor: str = field(default='#000000', metadata={'name': 'bgColor'})
+    fgcolor: str = field(default='#ffffff', metadata={'name': 'fgColor'})
+
+    @property
+    def date(self) -> str:
+        return self._rtdate if self._rtdate else self._date
+
+    @property
+    def time(self) -> str:
+        return self._rttime if self._rttime else self._time
+
+    @property
+    def track(self) -> str:
+        return self._rttrack if self._rttrack else self._track
+
+    def __post_init__(self):
+        self.datetime_obj = [to_datetime(self.date, self.time)]
 
     def join(self, o: 'BoardItem') -> bool:
         '''Joins another stop into this one if possible
@@ -456,14 +509,10 @@ class BoardItem(object):
         they will be collapsed into a single one.
         Returns true if the other BoardItem has been joined.
         '''
-
         if o.name == self.name and o.stopid == self.stopid and o.direction == self.direction:
             self.datetime_obj += o.datetime_obj
             return True
         return False
-
-    def __repr__(self):
-        repr(self._repr)
 
     def toTxt(self, servertime):
         return self.toTerm(servertime, color=false)
@@ -503,13 +552,11 @@ class BoardItem(object):
         '''Returns a nice version of the name
         If color is true, then 256-color escapes will be
         added to give the name the color of the line'''
-        name = self.name
-        name = name.replace(u'Spårvagn', '')
-        name = name.replace(u'Buss', '')
-        name += " "
+        name = self.sname + ' '
 
-        if self.wheelchair:
-            name += u"♿ "
+        name += self.accessibility.symbol
+        name += self.vehicle_type.symbol
+
         if self.night:
             name += u"☾ "
 
@@ -523,47 +570,3 @@ class BoardItem(object):
         fgcolor = int('0x' + self.bgcolor[1:], 16)
         return colorize(name, fgcolor, bg=bgcolor)
 
-    def __init__(self, d) -> None:
-        self._repr = d
-        if not isinstance(d, dict):
-            raise Exception("Invalid data")
-
-        self.name = d['name']
-        self.vehicle_type = d['type']
-        self.stop = d['stop']
-        self.stopid = d['stopid']
-        self.journeyid = d['journeyid']
-        self.date = d['date']
-        self.time = d['time']
-        self.sname = d.get('sname', '')
-
-        # TODO self.journeydetail = d['journeyDetailRef']
-
-        # optionals
-        self.booking = False
-        self.night = 'night' in d
-
-        self.track = d.get('track')
-        self.rtdate = d.get('rtDate')
-        self.rttime = d.get('rtTime')
-        if 'rtTrack' in d:
-            self.track = d['rtTrack']
-        # TODO booking
-        self.direction = d.get('direction')
-        self.wheelchair = d.get('accessibility') == 'wheelChair'
-
-        self.bgcolor = d.get('bgColor', '#0000ff')
-        self.stroke = d.get('stroke')
-        self.fgcolor = d.get('fgColor', '#ffffff')
-
-        # Set the internal useful date representation
-        if self.rtdate != None:
-            date = self.rtdate
-        else:
-            date = self.date
-        if self.rttime != None:
-            time = self.rttime
-        else:
-            time = self.time
-
-        self.datetime_obj = [to_datetime(date, time), ]
