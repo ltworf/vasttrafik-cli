@@ -67,7 +67,7 @@ deb-pkg: dist
 	mv vasttrafik-cli_`head -1 CHANGELOG`.orig.tar.gz* /tmp
 	cd /tmp; tar -xf vasttrafik-cli_*.orig.tar.gz
 	cp -r debian /tmp/vasttrafik-cli/
-	cd /tmp/vasttrafik-cli/; dpkg-buildpackage
+	cd /tmp/vasttrafik-cli/; dpkg-buildpackage --changes-option=-S
 	mkdir deb-pkg
 	mv /tmp/vasttrafik-cli_* deb-pkg
 	$(RM) -r /tmp/vasttrafik-cli
