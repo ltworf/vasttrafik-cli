@@ -164,8 +164,10 @@ def get_time(default):
 
 
 def tripmain():
-    orig = sys.argv[1] if len(sys.argv) > 2 else None
-    dest = sys.argv[2] if len(sys.argv) > 2 else None
+    if len(sys.argv) > 3:
+        sys.exit('Invalid number of parameters')
+    orig = sys.argv[1] if len(sys.argv) == 3 else None
+    dest = sys.argv[2] if len(sys.argv) == 3 else None
 
     origstop = get_stop('FROM: > ', orig)
     deststop = get_stop('TO: > ', dest)
@@ -182,6 +184,8 @@ def tripmain():
 
 
 def stopsmain():
+    if len(sys.argv) > 2:
+        sys.exit('Invalid number of parameters')
     preset = sys.argv[1] if len(sys.argv) == 2 else ''
     stop = get_stop('> ', preset)
     trams = vast.board(stop.id, time_span=120, departures=4)
