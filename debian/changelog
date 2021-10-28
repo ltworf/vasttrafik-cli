@@ -1,8 +1,9 @@
-vasttrafik-cli (1.2-1) UNRELEASED; urgency=medium
+vasttrafik-cli (1.2-1) unstable; urgency=low
 
   * New upstream release
   * Running tests after build
   * Add autopkgtest
+  * Source only upload
 
  -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Wed, 20 Oct 2021 11:49:18 +0200
 
