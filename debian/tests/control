@@ -1,6 +1,2 @@
-Test-Command: make test
-Depends: mypy
-Restrictions: allow-stderr
-
-Test-Command: ./trip.py chalmers valand
+Test-Command: trip chalmers valand
 Restrictions: allow-stderr, needs-internet
