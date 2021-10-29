@@ -30,6 +30,14 @@ CONFIGDIR = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config'))
 CACHEDIR = Path(os.environ.get('XDG_CACHE_HOME', Path.home() / '.cache'))
 
 
+def init() -> None:
+    '''
+    Create expected files and directories
+    '''
+    if not CACHEDIR.exists():
+        CACHEDIR.mkdir(parents=True)
+
+
 def get_key() -> str:
     '''
     This function tries to load the API key from some configuration files.
@@ -68,9 +76,6 @@ def save_completion(name: str) -> None:
     """
     Saves the name of the stop in the completion file
     """
-    if not CACHEDIR.exists():
-        return
-
     # Trim up to the part completion can manage
     for char in ' ,':
         if char in name:
@@ -200,6 +205,9 @@ def stopsmain():
 
 
 if __name__ == '__main__':
+
+    init()
+
     cmdname = Path(sys.argv[0]).name
     if cmdname.startswith('trip'):
         tripmain()

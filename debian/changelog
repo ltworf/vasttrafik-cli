@@ -1,6 +1,8 @@
 vasttrafik-cli (1.3-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * Test the installed command
+  * Do not run mypy in testsuite
 
  -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Fri, 29 Oct 2021 16:46:06 +0200
 
