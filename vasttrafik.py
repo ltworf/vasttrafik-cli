@@ -27,6 +27,7 @@ from time import monotonic
 from typing import Dict, List, Optional, NamedTuple, Union
 from pathlib import Path
 
+from wcwidth import wcswidth as ulen  # type: ignore
 from typedload import load, dump
 from xtermcolor import colorize  # type: ignore
 
@@ -390,7 +391,7 @@ class Leg(NamedTuple):
 
         name += self.type.symbol
 
-        while len(name) < 33:
+        while ulen(name) < 33:
             name = ' ' + name
 
         if not color:
@@ -534,7 +535,7 @@ class BoardItem:
         if self.night:
             name += u"☾ "
 
-        while len(name) < 20:
+        while ulen(name) < 20:
             name = " " + name
 
         if not color:
