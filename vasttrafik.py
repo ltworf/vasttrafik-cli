@@ -23,7 +23,7 @@ import datetime
 from enum import Enum
 import json
 import re
-from time import monotonic
+from time import time
 from typing import Dict, List, Optional, NamedTuple, Union
 from pathlib import Path
 
@@ -56,7 +56,7 @@ class Token:
     access_token: str
 
     def expired(self) -> bool:
-        return self.expires_in < monotonic()
+        return self.expires_in < time()
 
 
 def to_datetime(date: str, time: str) -> datetime.datetime:
@@ -117,7 +117,7 @@ class Vasttrafik:
         req.headers['Authorization'] = 'Basic ' + self.key
         with urllib.request.urlopen(req) as f:
             r = load(json.load(f), Token)
-        r.expires_in += int(monotonic())
+        r.expires_in += int(time())
         return r
 
     def _request(self, service, param):
