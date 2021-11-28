@@ -397,8 +397,8 @@ class Leg(NamedTuple):
         if not color:
             return name
 
-        bgcolor = int('0x' + self.fgColor[1:], 16)
-        fgcolor = int('0x' + self.bgColor[1:], 16)
+        fgcolor = int('0x' + self.fgColor[1:], 16)
+        bgcolor = int('0x' + self.bgColor[1:], 16)
         return colorize(name, fgcolor, bg=bgcolor)
 
 
@@ -541,7 +541,7 @@ class BoardItem:
         if not color:
             return name
 
-        bgcolor = int('0x' + self.fgcolor[1:], 16)
-        fgcolor = int('0x' + self.bgcolor[1:], 16)
+        fgcolor = int('0x' + self.fgcolor[1:], 16)
+        bgcolor = int('0x' + self.bgcolor[1:], 16)
         return colorize(name, fgcolor, bg=bgcolor)
 
