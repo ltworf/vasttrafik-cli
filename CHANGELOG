@@ -1,5 +1,6 @@
 1.5
 * Fix background/foreground colour swapping
+* Document workaround to fix emojis in terminal
 
 1.4
 * Correctly align unicode in terminal
