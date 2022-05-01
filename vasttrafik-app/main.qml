@@ -20,12 +20,14 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import Qt.labs.settings 1.1
 
 Window {
     width: 640
     height: 480
     visible: true
     title: qsTr("Hello World")
+    id: main_window
 
     ColumnLayout {
         anchors.fill: parent
@@ -65,7 +67,15 @@ Window {
                 onClicked: topswipe.currentIndex = 2
             }
         }
+    }
 
+    Settings {
+        id: settings
+        property alias tab_index: topswipe.currentIndex
+        property alias x: main_window.x
+        property alias y: main_window.y
+        property alias width: main_window.width
+        property alias height: main_window.height
     }
 
 
