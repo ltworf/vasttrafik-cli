@@ -1,6 +1,7 @@
 vasttrafik-cli (1.5-1) unstable; urgency=low
 
   * New upstream release
+  * Improve clean target (Closes: #1047722)
 
  -- Salvo 'LtWorf' Tomaselli <tiposchi@tiscali.it>  Wed, 26 Jan 2022 23:36:21 +0100
 

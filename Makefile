@@ -44,6 +44,7 @@ clean:
 	$(RM) -r deb-pkg
 	$(RM) -r __pycache__
 	$(RM) -r *~
+	$(RM) -r .mypy_cache/
 
 .PHONY: dist
 dist: clean
