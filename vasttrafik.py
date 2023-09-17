@@ -1,5 +1,5 @@
 # vasttrafik-cli
-# Copyright (C) 2012-2021 Salvo "LtWorf" Tomaselli
+# Copyright (C) 2012-2023 Salvo "LtWorf" Tomaselli
 #
 # vasttrafik-cli is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -301,6 +301,7 @@ class VehicleType(Enum):
     BOAT = 'BOAT'
     VAS = 'VAS'
     REG = 'REG'
+    TAXI = 'TAXI'
 
     @property
     def symbol(self) -> str:
@@ -311,7 +312,8 @@ class VehicleType(Enum):
             self.BUS: '🚌',
             self.WALK: '🚶',
             self.BOAT: '⛴',
-            self.ST: ' '
+            self.ST: ' ',
+            self.TAXI: '🚕',
         }
         return s[self]  # type: ignore
 
